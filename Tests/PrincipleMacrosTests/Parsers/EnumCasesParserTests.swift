@@ -7,11 +7,12 @@
 //
 
 @testable import PrincipleMacros
+import SwiftSyntaxMacroExpansion
 import Testing
 
 internal struct EnumCasesParserTests {
 
-    private let context = DiagnosticContextMock()
+    private let context = BasicMacroExpansionContext()
 
     @Test
     func testEnumCase() throws {

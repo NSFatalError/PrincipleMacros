@@ -7,6 +7,7 @@
 //
 
 import SwiftSyntax
+import SwiftSyntaxMacros
 
 public protocol Parser {
 
@@ -14,11 +15,11 @@ public protocol Parser {
 
     static func parse(
         declaration: DeclSyntaxProtocol,
-        in context: DiagnosticContext
+        in context: MacroExpansionContext
     ) -> ResultsCollection
 
     static func parse(
         memberBlock: MemberBlockSyntax,
-        in context: DiagnosticContext
+        in context: MacroExpansionContext
     ) -> ResultsCollection
 }
