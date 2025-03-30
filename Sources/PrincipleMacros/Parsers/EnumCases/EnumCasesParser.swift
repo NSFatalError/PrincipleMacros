@@ -7,12 +7,13 @@
 //
 
 import SwiftSyntax
+import SwiftSyntaxMacros
 
 public enum EnumCasesParser: _Parser {
 
     public static func parse(
         declaration: DeclSyntaxProtocol,
-        in _: DiagnosticContext
+        in _: MacroExpansionContext
     ) -> EnumCasesList {
         guard let declaration = EnumCaseDeclSyntax(declaration) else {
             return .init()

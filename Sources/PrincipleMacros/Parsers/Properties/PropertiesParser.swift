@@ -7,12 +7,13 @@
 //
 
 import SwiftSyntax
+import SwiftSyntaxMacros
 
 public enum PropertiesParser: _Parser {
 
     public static func parse(
         declaration: DeclSyntaxProtocol,
-        in context: DiagnosticContext
+        in context: MacroExpansionContext
     ) -> PropertiesList {
         guard let declaration = VariableDeclSyntax(declaration) else {
             return .init()

@@ -53,7 +53,13 @@ let package = Package(
         ),
         .testTarget(
             name: "PrincipleMacrosTests",
-            dependencies: ["PrincipleMacros"]
+            dependencies: [
+                "PrincipleMacros",
+                .product(
+                    name: "SwiftSyntaxMacroExpansion",
+                    package: "swift-syntax"
+                )
+            ]
         )
     ]
 )

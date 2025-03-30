@@ -6,6 +6,9 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
+import SwiftSyntax
+import SwiftSyntaxMacros
+
 internal protocol _Parser: Parser
 where ResultsCollection: _ParserResultsCollection {}
 
@@ -13,7 +16,7 @@ extension _Parser {
 
     public static func parse(
         memberBlock: MemberBlockSyntax,
-        in context: DiagnosticContext
+        in context: MacroExpansionContext
     ) -> ResultsCollection {
         ResultsCollection(
             memberBlock.members.flatMap { member in
