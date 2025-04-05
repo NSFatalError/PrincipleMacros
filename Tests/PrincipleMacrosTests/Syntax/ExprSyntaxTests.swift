@@ -106,9 +106,9 @@ internal struct ExprSyntaxTests {
                 )
             ]
         )
-        func testComposition(_ composition: (String, String)) {
-            let expr: ExprSyntax = "\(raw: composition.0)"
-            #expect(expr.inferredType?.description == composition.1)
+        func testComposition(expr: String, expectation: String) {
+            let expr: ExprSyntax = "\(raw: expr)"
+            #expect(expr.inferredType?.description == expectation)
         }
     }
 }

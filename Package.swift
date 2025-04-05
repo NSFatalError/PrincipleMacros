@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,12 +6,12 @@ import PackageDescription
 let package = Package(
     name: "PrincipleMacros",
     platforms: [
-        .macOS(.v13),
-        .macCatalyst(.v16),
-        .iOS(.v16),
-        .tvOS(.v16),
-        .watchOS(.v9),
-        .visionOS(.v1)
+        .macOS(.v15),
+        .macCatalyst(.v18),
+        .iOS(.v18),
+        .tvOS(.v18),
+        .watchOS(.v11),
+        .visionOS(.v2)
     ],
     products: [
         .library(
@@ -22,7 +22,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/NSFatalError/Principle",
-            from: "0.0.1"
+            from: "1.0.0"
         ),
         .package(
             url: "https://github.com/swiftlang/swift-syntax",

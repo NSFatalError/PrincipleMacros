@@ -20,7 +20,7 @@ internal struct ClosureExprSyntaxTests {
             """
 
             @Test
-            func testInterpolation() throws {
+            func testExpansion() throws {
                 let closure = expr.expanded(nestingLevel: 2)
                 let interpolation: ExprSyntax = """
                 .init(
@@ -53,7 +53,7 @@ internal struct ClosureExprSyntaxTests {
             """
 
             @Test
-            func testInterpolation() throws {
+            func testExpansion() throws {
                 let closure = expr.expanded(nestingLevel: 2)
                 let interpolation: ExprSyntax = """
                 .init(
@@ -94,7 +94,7 @@ internal struct ClosureExprSyntaxTests {
         """
 
         @Test
-        func testInterpolation() throws {
+        func testExpansion() throws {
             let closure = expr.expanded(nestingLevel: 2)
             let interpolation: ExprSyntax = """
             .init(

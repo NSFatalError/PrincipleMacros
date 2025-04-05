@@ -15,56 +15,56 @@ internal struct TypeSyntaxTests {
 
         @Test
         func testOptionalLiteral() {
-            let expr: TypeSyntax = "Int?"
-            #expect(expr.standardized.description == "Optional<Int>")
+            let type: TypeSyntax = "Int?"
+            #expect(type.standardized.description == "Optional<Int>")
         }
 
         @Test
         func testImplicitlyUnwrappedOptionalLiteral() {
-            let expr: TypeSyntax = "String!"
-            #expect(expr.standardized.description == "Optional<String>")
+            let type: TypeSyntax = "String!"
+            #expect(type.standardized.description == "Optional<String>")
         }
 
         @Test
         func testArrayLiteral() {
-            let expr: TypeSyntax = "[String]"
-            #expect(expr.standardized.description == "Array<String>")
+            let type: TypeSyntax = "[String]"
+            #expect(type.standardized.description == "Array<String>")
         }
 
         @Test
         func testDictionaryLiteral() {
-            let expr: TypeSyntax = "[String: Int]"
-            #expect(expr.standardized.description == "Dictionary<String, Int>")
+            let type: TypeSyntax = "[String: Int]"
+            #expect(type.standardized.description == "Dictionary<String, Int>")
         }
 
         @Test
         func testBasicType() {
-            let expr: TypeSyntax = "UIView"
-            #expect(expr.standardized.description == "UIView")
+            let type: TypeSyntax = "UIView"
+            #expect(type.standardized.description == "UIView")
         }
 
         @Test
         func testMemberType() {
-            let expr: TypeSyntax = "UIView.Constraints"
-            #expect(expr.standardized.description == "UIView.Constraints")
+            let type: TypeSyntax = "UIView.Constraints"
+            #expect(type.standardized.description == "UIView.Constraints")
         }
 
         @Test
         func testGenericType() {
-            let expr: TypeSyntax = "Cache<String, Int>"
-            #expect(expr.standardized.description == "Cache<String, Int>")
+            let type: TypeSyntax = "Cache<String, Int>"
+            #expect(type.standardized.description == "Cache<String, Int>")
         }
 
         @Test
         func testVoidType() {
-            let expr: TypeSyntax = "()"
-            #expect(expr.standardized.description == "Void")
+            let type: TypeSyntax = "()"
+            #expect(type.standardized.description == "Void")
         }
 
         @Test
         func testTupleType() {
-            let expr: TypeSyntax = "(_ first: String, second: Int, Bool)"
-            #expect(expr.standardized.description == "(_ first: String, second: Int, Bool)")
+            let type: TypeSyntax = "(_ first: String, second: Int, Bool)"
+            #expect(type.standardized.description == "(_ first: String, second: Int, Bool)")
         }
     }
 
@@ -82,9 +82,9 @@ internal struct TypeSyntaxTests {
                 )
             ]
         )
-        func testComposition(_ composition: (String, String)) {
-            let expr: TypeSyntax = "\(raw: composition.0)"
-            #expect(expr.standardized.description == composition.1)
+        func testComposition(type: String, expectation: String) {
+            let type: TypeSyntax = "\(raw: type)"
+            #expect(type.standardized.description == expectation)
         }
     }
 }

@@ -25,16 +25,21 @@ public struct SwitchExprBuilder: ExprBuilder {
     }
 
     public func build() -> SwitchExprSyntax {
-        SwitchExprSyntax(subject: subject, cases: switchCases())
+        SwitchExprSyntax(
+            subject: subject.withLeadingSpace.withTrailingSpace,
+            leftBrace: .leftBraceToken().withTrailingNewline,
+            cases: switchCases()
+        )
     }
 
     private func switchCases() -> SwitchCaseListSyntax {
         SwitchCaseListSyntax(
             cases.map { enumCase in
                 .switchCase(
-                    SwitchCaseSyntax(
-                        "case \(switchCase(for: enumCase)): \(statementsBuilder(enumCase))"
-                    )
+                    SwitchCaseSyntax("""
+                    case \(switchCase(for: enumCase)):
+                        \(statementsBuilder(enumCase))\n
+                    """)
                 )
             }
         )
@@ -60,7 +65,7 @@ public struct SwitchExprBuilder: ExprBuilder {
 
         return SwitchCaseItemSyntax(
             pattern: ValueBindingPatternSyntax(
-                bindingSpecifier: .keyword(.let),
+                bindingSpecifier: .keyword(.let).withTrailingSpace,
                 pattern: ExpressionPatternSyntax(
                     expression: FunctionCallExprSyntax(
                         calledExpression: memberAccessExpression,
