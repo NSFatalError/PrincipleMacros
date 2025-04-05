@@ -1,13 +1,13 @@
 {
-  "originHash" : "908df360b8c2dfd8f054b79926bb65d2ec9386cc68cf7c1d9329b54ee52423a9",
+  "originHash" : "99431853c87a6b5650f35f74288f2d84c2781ee280b91e34ae7d502413704b4b",
   "pins" : [
     {
       "identity" : "principle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/NSFatalError/Principle",
       "state" : {
-        "revision" : "3a0ce9bef0828a948b12dc6fb30589a4cfd85ef3",
-        "version" : "0.0.3"
+        "revision" : "3db0c92aa564f3b6451063a3374e6ad177cdfebf",
+        "version" : "1.0.0"
       }
     },
     {

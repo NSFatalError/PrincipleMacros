@@ -6,8 +6,8 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-@_documentation(visibility: internal) @_exported import SwiftBasicFormat
-@_documentation(visibility: internal) @_exported import SwiftDiagnostics
-@_documentation(visibility: internal) @_exported import SwiftSyntax
-@_documentation(visibility: internal) @_exported import SwiftSyntaxBuilder
-@_documentation(visibility: internal) @_exported import SwiftSyntaxMacros
+@_documentation(visibility: private) @_exported import SwiftBasicFormat
+@_documentation(visibility: private) @_exported import SwiftDiagnostics
+@_documentation(visibility: private) @_exported import SwiftSyntax
+@_documentation(visibility: private) @_exported import SwiftSyntaxBuilder
+@_documentation(visibility: private) @_exported import SwiftSyntaxMacros
