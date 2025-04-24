@@ -16,7 +16,7 @@ extension _Parser {
 
     public static func parse(
         memberBlock: MemberBlockSyntax,
-        in context: MacroExpansionContext
+        in context: any MacroExpansionContext
     ) -> ResultsCollection {
         ResultsCollection(
             memberBlock.members.flatMap { member in

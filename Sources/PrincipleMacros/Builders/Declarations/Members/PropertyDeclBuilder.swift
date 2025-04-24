@@ -15,7 +15,7 @@ public protocol PropertyDeclBuilder: MemberDeclBuilder {
 
 extension PropertyDeclBuilder {
 
-    public var basicDeclaration: BasicDeclSyntax {
+    public var basicDeclaration: any BasicDeclSyntax {
         property.declaration
     }
 }

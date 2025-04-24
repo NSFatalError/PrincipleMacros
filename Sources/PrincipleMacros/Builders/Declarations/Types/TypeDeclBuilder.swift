@@ -10,12 +10,12 @@ import SwiftSyntax
 
 public protocol TypeDeclBuilder: DeclBuilder {
 
-    var typeDeclaration: TypeDeclSyntax { get }
+    var typeDeclaration: any TypeDeclSyntax { get }
 }
 
 extension TypeDeclBuilder {
 
-    public var basicDeclaration: BasicDeclSyntax {
+    public var basicDeclaration: any BasicDeclSyntax {
         typeDeclaration
     }
 }

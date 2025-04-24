@@ -15,7 +15,7 @@ public protocol EnumDeclBuilder: TypeDeclBuilder {
 
 extension EnumDeclBuilder {
 
-    public var typeDeclaration: TypeDeclSyntax {
+    public var typeDeclaration: any TypeDeclSyntax {
         declaration
     }
 }

@@ -7,7 +7,7 @@
 //
 
 import Algorithms
-import Principle
+import PrincipleCollections
 import SwiftSyntax
 
 public struct PropertiesList: _ParserResultsCollection {

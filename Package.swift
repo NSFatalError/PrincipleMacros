@@ -38,7 +38,7 @@ let package = Package(
             name: "PrincipleMacros",
             dependencies: [
                 .product(
-                    name: "Principle",
+                    name: "PrincipleCollections",
                     package: "Principle"
                 ),
                 .product(
@@ -63,3 +63,10 @@ let package = Package(
         )
     ]
 )
+
+for target in package.targets {
+    target.swiftSettings = (target.swiftSettings ?? []) + [
+        .swiftLanguageMode(.v6),
+        .enableUpcomingFeature("ExistentialAny")
+    ]
+}
