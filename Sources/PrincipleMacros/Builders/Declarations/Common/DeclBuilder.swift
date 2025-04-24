@@ -10,7 +10,7 @@ import SwiftSyntax
 
 public protocol DeclBuilder {
 
-    var basicDeclaration: BasicDeclSyntax { get }
+    var basicDeclaration: any BasicDeclSyntax { get }
     var settings: DeclBuilderSettings { get }
 
     func build() throws -> [DeclSyntax]

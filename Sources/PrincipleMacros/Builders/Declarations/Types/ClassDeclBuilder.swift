@@ -15,7 +15,7 @@ public protocol ClassDeclBuilder: TypeDeclBuilder {
 
 extension ClassDeclBuilder {
 
-    public var typeDeclaration: TypeDeclSyntax {
+    public var typeDeclaration: any TypeDeclSyntax {
         declaration
     }
 }

@@ -14,12 +14,12 @@ public protocol Parser {
     associatedtype ResultsCollection: ParserResultsCollection
 
     static func parse(
-        declaration: DeclSyntaxProtocol,
-        in context: MacroExpansionContext
+        declaration: any DeclSyntaxProtocol,
+        in context: any MacroExpansionContext
     ) -> ResultsCollection
 
     static func parse(
         memberBlock: MemberBlockSyntax,
-        in context: MacroExpansionContext
+        in context: any MacroExpansionContext
     ) -> ResultsCollection
 }

@@ -15,7 +15,7 @@ public protocol StructDeclBuilder: TypeDeclBuilder {
 
 extension StructDeclBuilder {
 
-    public var typeDeclaration: TypeDeclSyntax {
+    public var typeDeclaration: any TypeDeclSyntax {
         declaration
     }
 }

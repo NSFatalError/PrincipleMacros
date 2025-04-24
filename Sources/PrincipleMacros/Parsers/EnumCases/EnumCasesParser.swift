@@ -12,8 +12,8 @@ import SwiftSyntaxMacros
 public enum EnumCasesParser: _Parser {
 
     public static func parse(
-        declaration: DeclSyntaxProtocol,
-        in _: MacroExpansionContext
+        declaration: any DeclSyntaxProtocol,
+        in _: any MacroExpansionContext
     ) -> EnumCasesList {
         guard let declaration = EnumCaseDeclSyntax(declaration) else {
             return .init()

@@ -38,7 +38,7 @@ let package = Package(
             name: "PrincipleMacros",
             dependencies: [
                 .product(
-                    name: "Principle",
+                    name: "PrincipleCollections",
                     package: "Principle"
                 ),
                 .product(
