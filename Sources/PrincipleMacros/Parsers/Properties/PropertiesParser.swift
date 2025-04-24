@@ -12,8 +12,8 @@ import SwiftSyntaxMacros
 public enum PropertiesParser: _Parser {
 
     public static func parse(
-        declaration: any DeclSyntaxProtocol,
-        in context: any MacroExpansionContext
+        declaration: some DeclSyntaxProtocol,
+        in context: some MacroExpansionContext
     ) -> PropertiesList {
         guard let declaration = VariableDeclSyntax(declaration) else {
             return .init()
