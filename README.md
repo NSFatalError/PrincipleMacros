@@ -1,6 +1,7 @@
 # PrincipleMacros
 
 ![Swift](https://img.shields.io/badge/Swift-6.0-EF5239?logo=swift&labelColor=white)
+[![Codecov](https://codecov.io/gh/NSFatalError/PrincipleMacros/graph/badge.svg?token=3883VA6VPI)](https://codecov.io/gh/NSFatalError/PrincipleMacros)
 
 Essential tools that extend the capabilities of `SwiftSyntax`, simplifying the implementation of custom macros.
 
