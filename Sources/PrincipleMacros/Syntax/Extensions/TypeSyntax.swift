@@ -115,23 +115,23 @@ extension GenericArgumentClauseSyntax {
             arguments: GenericArgumentListSyntax(
                 arguments.map { element in
                     #if canImport(SwiftSyntax601)
-                    switch element.argument {
-                    case .type(let type):
-                        GenericArgumentSyntax(
-                            argument: .type(type.standardized),
-                            trailingComma: element.trailingComma?.trimmed.withTrailingSpace
-                        )
-                    default:
-                        GenericArgumentSyntax(
-                            argument: element.argument,
-                            trailingComma: element.trailingComma?.trimmed.withTrailingSpace
-                        )
-                    }
+                        switch element.argument {
+                        case let .type(type):
+                            GenericArgumentSyntax(
+                                argument: .type(type.standardized),
+                                trailingComma: element.trailingComma?.trimmed.withTrailingSpace
+                            )
+                        default:
+                            GenericArgumentSyntax(
+                                argument: element.argument,
+                                trailingComma: element.trailingComma?.trimmed.withTrailingSpace
+                            )
+                        }
                     #else
-                    GenericArgumentSyntax(
-                        argument: element.argument.standardized,
-                        trailingComma: element.trailingComma?.trimmed.withTrailingSpace
-                    )
+                        GenericArgumentSyntax(
+                            argument: element.argument.standardized,
+                            trailingComma: element.trailingComma?.trimmed.withTrailingSpace
+                        )
                     #endif
                 }
             )
