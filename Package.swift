@@ -21,30 +21,14 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/NSFatalError/Principle",
-            from: "1.0.0"
-        ),
-        .package(
             url: "https://github.com/swiftlang/swift-syntax",
             "600.0.0" ..< "602.0.0"
-        ),
-        .package(
-            url: "https://github.com/apple/swift-algorithms",
-            from: "1.2.0"
         )
     ],
     targets: [
         .target(
             name: "PrincipleMacros",
             dependencies: [
-                .product(
-                    name: "PrincipleCollections",
-                    package: "Principle"
-                ),
-                .product(
-                    name: "Algorithms",
-                    package: "swift-algorithms"
-                ),
                 .product(
                     name: "SwiftSyntaxMacros",
                     package: "swift-syntax"

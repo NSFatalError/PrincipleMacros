@@ -1,33 +1,6 @@
 {
-  "originHash" : "3c38b8418312073f7476856a30a2823c4cfc8c9e3547071f4f7c7a1e555590cb",
+  "originHash" : "300b63bc52fc36d4e0a555a932e9715417628f92b25454b2233d22a4d5c6a0f1",
   "pins" : [
-    {
-      "identity" : "principle",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/NSFatalError/Principle",
-      "state" : {
-        "revision" : "b7b16cbd21972a675a3543bae2f37aa323dd786b",
-        "version" : "1.0.3"
-      }
-    },
-    {
-      "identity" : "swift-algorithms",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-algorithms",
-      "state" : {
-        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
-        "version" : "1.2.1"
-      }
-    },
-    {
-      "identity" : "swift-numerics",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-numerics.git",
-      "state" : {
-        "revision" : "e0ec0f5f3af6f3e4d5e7a19d2af26b481acb6ba8",
-        "version" : "1.0.3"
-      }
-    },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",

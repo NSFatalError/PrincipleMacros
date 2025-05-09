@@ -6,8 +6,6 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import Algorithms
-import PrincipleCollections
 import SwiftSyntax
 
 public struct PropertiesList: _ParserResultsCollection {
@@ -47,12 +45,6 @@ extension PropertiesList {
 }
 
 extension PropertiesList {
-
-    public var uniqueInferredTypes: [TypeSyntax] {
-        all.lazy.map(\.inferredType)
-            .uniqued(on: \.description)
-            .sorted(on: \.description)
-    }
 
     public func withInferredType(like someType: TypeSyntax) -> Self {
         .init(filter { $0.inferredType.isLike(someType) })
