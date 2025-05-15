@@ -17,13 +17,13 @@ internal struct PropertiesParserTests {
     @Test
     func testStoredLet() throws {
         let decl: DeclSyntax = """
-        public static let myLet: Int?
+        public internal(set) static let myLet: Int?
         """
         let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .immutable)
         #expect(property.accessControlLevel?.trimmedDescription == "public")
-        #expect(property.setterAccessControlLevel?.trimmedDescription == "public")
+        #expect(property.setterAccessControlLevel?.trimmedDescription == "internal")
         #expect(property.typeScopeSpecifier?.trimmedDescription == "static")
         #expect(property.trimmedName.description == "myLet")
         #expect(property.inferredType.description == "Optional<Int>")
