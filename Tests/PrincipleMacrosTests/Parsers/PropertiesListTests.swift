@@ -20,11 +20,11 @@ internal struct PropertiesListTests {
             let letProp: Int? = 0
             var varProp = ""
             lazy var lazyVarProp = Optional<Int>.none
-        
+
             static let staticLetProp = String(data: Data(), encoding: .utf8)
             static var staticVarProp = Int?.some(0)
             class var classVarProp: String { "" }
-        
+
             var computedProp: Int? { 0 }
             var computedSettableProp: Optional<Int> {
                 get { 0 }

@@ -55,7 +55,7 @@ extension PropertiesList {
             uniquingKeysWith: { first, _ in first }
         )
         return dictionary.values.sorted { lhs, rhs in
-            return lhs.description < rhs.description
+            lhs.description < rhs.description
         }
     }
 
