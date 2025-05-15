@@ -17,6 +17,7 @@ internal struct PropertiesListTests {
     init() throws {
         let decl: DeclSyntax = """
         class Test {
+
             let letProp: Int? = 0
             var varProp = ""
             lazy var lazyVarProp = Optional<Int>.none
