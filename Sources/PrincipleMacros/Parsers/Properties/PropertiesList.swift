@@ -46,6 +46,19 @@ extension PropertiesList {
 
 extension PropertiesList {
 
+    public var uniqueInferredTypes: [TypeSyntax] {
+        let allInferredTypes = all.lazy.map { property in
+            (property.inferredType.description, property.inferredType)
+        }
+        let dictionary = Dictionary(
+            allInferredTypes,
+            uniquingKeysWith: { first, _ in first }
+        )
+        return dictionary.values.sorted { lhs, rhs in
+            return lhs.description < rhs.description
+        }
+    }
+
     public func withInferredType(like someType: TypeSyntax) -> Self {
         .init(filter { $0.inferredType.isLike(someType) })
     }

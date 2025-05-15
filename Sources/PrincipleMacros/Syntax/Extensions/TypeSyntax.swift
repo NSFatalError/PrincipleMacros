@@ -11,7 +11,7 @@ import SwiftSyntax
 extension TypeSyntax {
 
     public func isLike(_ other: TypeSyntax) -> Bool {
-        trimmedDescription == other.trimmedDescription
+        standardized.trimmedDescription == other.standardized.trimmedDescription
     }
 }
 
