@@ -17,12 +17,13 @@ internal struct PropertiesParserTests {
     @Test
     func testStoredLet() throws {
         let decl: DeclSyntax = """
-        public static let myLet: Int?
+        public internal(set) static let myLet: Int?
         """
         let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .immutable)
         #expect(property.accessControlLevel?.trimmedDescription == "public")
+        #expect(property.setterAccessControlLevel?.trimmedDescription == "internal")
         #expect(property.typeScopeSpecifier?.trimmedDescription == "static")
         #expect(property.trimmedName.description == "myLet")
         #expect(property.inferredType.description == "Optional<Int>")
@@ -33,12 +34,13 @@ internal struct PropertiesParserTests {
     @Test
     func testStoredVar() throws {
         let decl: DeclSyntax = """
-        private var myVar = "Hello, world!"
+        private(set) var myVar = "Hello, world!"
         """
         let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .mutable)
-        #expect(property.accessControlLevel?.trimmedDescription == "private")
+        #expect(property.accessControlLevel == nil)
+        #expect(property.setterAccessControlLevel?.trimmedDescription == "private")
         #expect(property.typeScopeSpecifier == nil)
         #expect(property.trimmedName.description == "myVar")
         #expect(property.inferredType.description == "String")
@@ -58,6 +60,7 @@ internal struct PropertiesParserTests {
         #expect(property.kind == .stored)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)
+        #expect(property.setterAccessControlLevel == nil)
         #expect(property.typeScopeSpecifier?.trimmedDescription == "class")
         #expect(property.trimmedName.description == "myObservedVar")
         #expect(property.inferredType.description == "UIView.Constraint")
@@ -77,6 +80,7 @@ internal struct PropertiesParserTests {
         #expect(property.kind == .computed)
         #expect(property.mutability == .immutable)
         #expect(property.accessControlLevel?.trimmedDescription == "fileprivate")
+        #expect(property.setterAccessControlLevel?.trimmedDescription == "fileprivate")
         #expect(property.typeScopeSpecifier == nil)
         #expect(property.trimmedName.description == "myComputedVar")
         #expect(property.inferredType.description == "Array<Model>")
@@ -96,6 +100,7 @@ internal struct PropertiesParserTests {
         #expect(property.kind == .computed)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)
+        #expect(property.setterAccessControlLevel == nil)
         #expect(property.typeScopeSpecifier?.trimmedDescription == "static")
         #expect(property.trimmedName.description == "mySettableVar")
         #expect(property.inferredType.description == "Optional<Array<Model>>")

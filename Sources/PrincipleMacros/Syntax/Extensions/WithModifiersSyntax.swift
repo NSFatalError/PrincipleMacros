@@ -21,12 +21,27 @@ extension WithModifiersSyntax {
             TokenKind.typeScopeSpecifiers.contains(name.tokenKind)
         }
     }
+}
+
+extension WithModifiersSyntax {
 
     public var accessControlLevel: TokenSyntax? {
-        modifiers.lazy.map(\.name).first { name in
-            TokenKind.accessControlLevels.contains(name.tokenKind)
-        }
+        accessControlLevel(detail: nil)
     }
+
+    public var setterAccessControlLevel: TokenSyntax? {
+        accessControlLevel(detail: .identifier("set")) ?? accessControlLevel
+    }
+
+    private func accessControlLevel(detail: TokenKind?) -> TokenSyntax? {
+        modifiers.lazy
+            .filter { $0.detail?.detail.tokenKind == detail }
+            .map(\.name)
+            .first { TokenKind.accessControlLevels.contains($0.tokenKind) }
+    }
+}
+
+extension WithModifiersSyntax {
 
     public func accessControlLevel(
         inheritedBy inheritingDeclaration: InheritingDeclaration,
