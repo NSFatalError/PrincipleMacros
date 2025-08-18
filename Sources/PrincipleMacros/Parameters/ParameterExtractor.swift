@@ -76,8 +76,7 @@ public struct ParameterExtractor {
         }
 
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
-           let referenceExpression = DeclReferenceExprSyntax(memberAccessExpression.declName),
-           referenceExpression.baseName.tokenKind == .keyword(.self),
+           memberAccessExpression.declName.baseName.tokenKind == .keyword(.self),
            let baseType = memberAccessExpression.base {
             return .isolated("\(baseType)")
         }

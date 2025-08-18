@@ -29,7 +29,7 @@ extension DeclBuilder {
 
         guard index <= maxAllowedIndex else {
             let tokenKind = TokenKind.accessControlLevels[maxAllowedIndex]
-            return TokenSyntax(tokenKind, presence: .present)
+            return TokenSyntax(tokenKind, presence: .present).withTrailingSpace
         }
 
         switch settings.inheritingDeclaration {
