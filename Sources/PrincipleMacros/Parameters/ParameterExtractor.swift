@@ -64,9 +64,9 @@ public struct ParameterExtractor {
         return rawString
     }
 
-    public func globalActorIsolationPreference(
+    public func preferredGlobalActorIsolation(
         withLabel label: TokenSyntax?
-    ) throws -> GlobalActorIsolationPreference? {
+    ) throws -> GlobalActorIsolation? {
         guard let expression = expression(withLabel: label) else {
             return nil
         }
@@ -77,8 +77,8 @@ public struct ParameterExtractor {
 
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
            memberAccessExpression.declName.baseName.tokenKind == .keyword(.self),
-           let baseType = memberAccessExpression.base {
-            return .isolated("\(baseType)")
+           let explicitType = memberAccessExpression.base?.trimmed {
+            return .isolated(trimmedType: "\(explicitType)")
         }
 
         throw ParameterExtractionError.unexpectedSyntaxType
