@@ -22,10 +22,10 @@ extension TypeDeclBuilder {
 
 extension TypeDeclBuilder {
 
-    public var trimmedTypeName: TypeSyntax {
+    public var trimmedType: TypeSyntax {
         switch TypeDeclBuilderContext.current {
-        case let .extension(extendedType):
-            extendedType.trimmed
+        case let .extension(trimmedType):
+            trimmedType
         case .declaration:
             "\(typeDeclaration.name.trimmed)"
         }
@@ -33,7 +33,7 @@ extension TypeDeclBuilder {
 
     public func buildExtension(of extendedType: some TypeSyntaxProtocol) throws -> MemberBlockSyntax {
         try TypeDeclBuilderContext.$current.withValue(
-            .extension(TypeSyntax(extendedType)),
+            .extension(trimmedType: TypeSyntax(extendedType.trimmed)),
             operation: {
                 try MemberBlockSyntax(
                     members: MemberBlockItemListSyntax(

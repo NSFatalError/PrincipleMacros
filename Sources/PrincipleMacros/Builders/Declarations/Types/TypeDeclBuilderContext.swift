@@ -11,7 +11,7 @@ import SwiftSyntax
 internal enum TypeDeclBuilderContext {
 
     case declaration
-    case `extension`(TypeSyntax)
+    case `extension`(trimmedType: TypeSyntax)
 }
 
 extension TypeDeclBuilderContext {

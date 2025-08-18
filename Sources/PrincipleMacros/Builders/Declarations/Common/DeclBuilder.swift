@@ -20,19 +20,26 @@ extension DeclBuilder {
 
     public var inheritedAccessControlLevel: TokenSyntax? {
         let settings = settings.accessControlLevel
-        return basicDeclaration.accessControlLevel(
+        return basicDeclaration.inlinableAccessControlLevel(
             inheritedBy: settings.inheritingDeclaration,
             maxAllowed: settings.maxAllowed
         )
     }
+}
+
+extension DeclBuilder {
 
     public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        if let preferred = settings.preferredGlobalActorIsolation {
-            return preferred
+        if let explicit = settings.explicitGlobalActorIsolation {
+            return explicit
         }
-        if let inferredType = basicDeclaration.globalActor?.attributeName.trimmed {
-            return .isolated(trimmedType: inferredType)
+        if let inherited = basicDeclaration.globalActor?.attributeName {
+            return .isolated(trimmedType: inherited.trimmed)
         }
         return .nonisolated
+    }
+
+    public var inheritedGlobalActorAttribute: AttributeSyntax? {
+        inheritedGlobalActorIsolation?.inlinableAttribute
     }
 }
