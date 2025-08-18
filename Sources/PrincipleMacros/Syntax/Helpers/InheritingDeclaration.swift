@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-public enum InheritingDeclaration {
+public enum InheritingDeclaration: Hashable {
 
     case member
     case peer

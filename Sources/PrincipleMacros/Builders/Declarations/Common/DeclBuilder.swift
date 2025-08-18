@@ -20,9 +20,40 @@ extension DeclBuilder {
 
     public var inheritedAccessControlLevel: TokenSyntax? {
         let settings = settings.accessControlLevel
-        return basicDeclaration.accessControlLevel(
-            inheritedBy: settings.inheritingDeclaration,
-            maxAllowed: settings.maxAllowed
-        )
+        guard let accessControlLevel = basicDeclaration.accessControlLevel,
+              let index = TokenKind.accessControlLevels.firstIndex(of: accessControlLevel.tokenKind),
+              let maxAllowedIndex = Keyword.accessControlLevels.firstIndex(of: settings.maxAllowed)
+        else {
+            return nil
+        }
+
+        guard index <= maxAllowedIndex else {
+            let tokenKind = TokenKind.accessControlLevels[maxAllowedIndex]
+            return TokenSyntax(tokenKind, presence: .present).withTrailingSpace
+        }
+
+        switch settings.inheritingDeclaration {
+        case .member:
+            if let internalIndex = Keyword.accessControlLevels.firstIndex(of: .internal),
+               index <= internalIndex {
+                return nil
+            }
+        case .peer:
+            break
+        }
+
+        return accessControlLevel.trimmed.withTrailingSpace
+    }
+
+    public var inheritedGlobalActorIsolation: AttributeSyntax? {
+        let globalActor: AttributeSyntax? = switch settings.globalActorIsolationPreference {
+        case .nonisolated:
+            nil
+        case let .isolated(globalActor):
+            "@\(globalActor)"
+        case .none:
+            basicDeclaration.globalActor?.trimmed
+        }
+        return globalActor?.withTrailingSpace
     }
 }

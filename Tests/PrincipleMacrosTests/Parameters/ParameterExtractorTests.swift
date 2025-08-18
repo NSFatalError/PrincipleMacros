@@ -19,25 +19,35 @@ internal struct ParameterExtractorTests {
     @Test
     func testExpressionExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(value: Type.make())")
-        let extracted = try extractor.expression(withLabel: "value")
+        let extracted = extractor.expression(withLabel: "value")
         let expected: ExprSyntax = "Type.make()"
-        #expect(extracted.description == expected.description)
+        #expect(extracted?.description == expected.description)
     }
 
     @Test
     func testUnnamedExpressionExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(value: Type.make(), 123)")
-        let extracted = try extractor.expression(withLabel: nil)
+        let extracted = extractor.expression(withLabel: nil)
         let expected: ExprSyntax = "123"
-        #expect(extracted.description == expected.description)
+        #expect(extracted?.description == expected.description)
     }
+
+    @Test
+    func testMissingExpressionExtraction() throws {
+        let extractor = try makeExtractor(from: #"#MyMacro(arg: Type.make())"#)
+        let extracted = extractor.expression(withLabel: "value")
+        #expect(extracted == nil)
+    }
+}
+
+extension ParameterExtractorTests {
 
     @Test
     func testTrailingClosureExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro { _ in }")
         let extracted = try extractor.trailingClosure(withLabel: "operation")
         let expected: ExprSyntax = "{ _ in }"
-        #expect(extracted.description == expected.description)
+        #expect(extracted?.description == expected.description)
     }
 
     @Test
@@ -45,8 +55,11 @@ internal struct ParameterExtractorTests {
         let extractor = try makeExtractor(from: "#MyMacro(operation: perform)")
         let extracted = try extractor.trailingClosure(withLabel: "operation")
         let expected: ExprSyntax = "perform"
-        #expect(extracted.description == expected.description)
+        #expect(extracted?.description == expected.description)
     }
+}
+
+extension ParameterExtractorTests {
 
     @Test
     func testRawStringExtraction() throws {
@@ -56,18 +69,53 @@ internal struct ParameterExtractorTests {
     }
 
     @Test
-    func testUnexpectedSyntaxTypeError() throws {
+    func testUnexpectedSyntaxWhenPerformingRawStringExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(string: reference.arg)"#)
         #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
             try extractor.rawString(withLabel: "string")
         }
     }
+}
+
+extension ParameterExtractorTests {
 
     @Test
-    func testNotFoundError() throws {
-        let extractor = try makeExtractor(from: #"#MyMacro(string: "arg")"#)
-        #expect(throws: ParameterExtractionError.notFound) {
-            try extractor.rawString(withLabel: "value")
+    func testMissingGlobalActorPreferenceExtraction() throws {
+        let extractor = try makeExtractor(from: "#MyMacro()")
+        let extracted = try extractor.globalActorIsolationPreference(withLabel: "isolation")
+        #expect(extracted == nil)
+    }
+
+    @Test
+    func testNonisolatedGlobalActorPreferenceExtraction() throws {
+        let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
+        let extracted = try extractor.globalActorIsolationPreference(withLabel: "isolation")
+        #expect(extracted == .nonisolated)
+    }
+
+    @Test(
+        arguments: [
+            "MainActor",
+            "SomeType.SomeActor"
+        ]
+    )
+    func testIsolatedGlobalActorPreferenceExtraction(isolation: String) throws {
+        let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
+        let extracted = try extractor.globalActorIsolationPreference(withLabel: "isolation")
+
+        switch extracted {
+        case let .isolated(globalActor):
+            #expect(globalActor.description == isolation)
+        default:
+            Issue.record()
+        }
+    }
+
+    @Test
+    func testUnexpectedSyntaxWhenPerformingGlobalActorPreferenceExtraction() throws {
+        let extractor = try makeExtractor(from: #"#MyMacro(isolation: MainActor.Type)"#)
+        #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
+            try extractor.globalActorIsolationPreference(withLabel: "isolation")
         }
     }
 }
