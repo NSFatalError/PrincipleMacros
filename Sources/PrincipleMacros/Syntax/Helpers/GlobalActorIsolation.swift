@@ -15,19 +15,18 @@ public enum GlobalActorIsolation: Hashable {
 
     public var trimmedType: TypeSyntax? {
         switch self {
-        case let .isolated(type):
-            type
+        case let .isolated(trimmedType):
+            trimmedType
         case .nonisolated:
             nil
         }
     }
 
-    public var trimmedAttribute: AttributeSyntax? {
+    public var inlinableAttribute: AttributeSyntax? {
         guard let trimmedType else {
             return nil
         }
-        return AttributeSyntax(
-            attributeName: trimmedType
-        )
+        let attribute = AttributeSyntax(attributeName: trimmedType)
+        return attribute.withTrailingSpace
     }
 }

@@ -43,7 +43,7 @@ extension WithModifiersSyntax {
 
 extension WithModifiersSyntax {
 
-    public func accessControlLevel(
+    public func inlinableAccessControlLevel(
         inheritedBy inheritingDeclaration: InheritingDeclaration,
         maxAllowed: Keyword
     ) -> TokenSyntax? {
