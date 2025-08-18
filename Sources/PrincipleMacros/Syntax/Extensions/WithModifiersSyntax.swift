@@ -41,23 +41,55 @@ extension WithModifiersSyntax {
     }
 }
 
+extension WithModifiersSyntax {
+
+    public func accessControlLevel(
+        inheritedBy inheritingDeclaration: InheritingDeclaration,
+        maxAllowed: Keyword
+    ) -> TokenSyntax? {
+        guard let accessControlLevel,
+              let index = TokenKind.accessControlLevels.firstIndex(of: accessControlLevel.tokenKind),
+              let maxAllowedIndex = Keyword.accessControlLevels.firstIndex(of: maxAllowed)
+        else {
+            return nil
+        }
+
+        guard index <= maxAllowedIndex else {
+            let tokenKind = TokenKind.accessControlLevels[maxAllowedIndex]
+            return TokenSyntax(tokenKind, presence: .present).withTrailingSpace
+        }
+
+        switch inheritingDeclaration {
+        case .member:
+            if let internalIndex = Keyword.accessControlLevels.firstIndex(of: .internal),
+               index <= internalIndex {
+                return nil
+            }
+        case .peer:
+            break
+        }
+
+        return accessControlLevel.trimmed.withTrailingSpace
+    }
+}
+
 extension TokenKind {
 
-    static let typeScopeSpecifiers = Keyword.typeScopeSpecifiers
+    fileprivate static let typeScopeSpecifiers = Keyword.typeScopeSpecifiers
         .map(TokenKind.keyword)
 
-    static let accessControlLevels = Keyword.accessControlLevels
+    fileprivate static let accessControlLevels = Keyword.accessControlLevels
         .map(TokenKind.keyword)
 }
 
 extension Keyword {
 
-    static let typeScopeSpecifiers: [Keyword] = [
+    fileprivate static let typeScopeSpecifiers: [Keyword] = [
         .static,
         .class
     ]
 
-    static let accessControlLevels: [Keyword] = [
+    fileprivate static let accessControlLevels: [Keyword] = [
         .private,
         .fileprivate,
         .internal,
