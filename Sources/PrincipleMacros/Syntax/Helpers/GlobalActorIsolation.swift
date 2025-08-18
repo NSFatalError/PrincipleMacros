@@ -1,5 +1,5 @@
 //
-//  GlobalActorIsolationPreference.swift
+//  GlobalActorIsolation.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 18/08/2025.
