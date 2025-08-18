@@ -26,15 +26,13 @@ extension DeclBuilder {
         )
     }
 
-    public var inheritedGlobalActorIsolation: AttributeSyntax? {
-        let globalActor: AttributeSyntax? = switch settings.globalActorIsolationPreference {
-        case .nonisolated:
-            nil
-        case let .isolated(globalActor):
-            "@\(globalActor)"
-        case .none:
-            basicDeclaration.globalActor?.trimmed
+    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
+        if let preferred = settings.preferredGlobalActorIsolation {
+            return preferred
         }
-        return globalActor?.withTrailingSpace
+        if let inferred = basicDeclaration.globalActor?.attributeName {
+            return .isolated(inferred)
+        }
+        return .nonisolated
     }
 }
