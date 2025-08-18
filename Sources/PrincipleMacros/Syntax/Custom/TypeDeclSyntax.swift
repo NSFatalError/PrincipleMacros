@@ -8,7 +8,7 @@
 
 import SwiftSyntax
 
-public protocol TypeDeclSyntax: DeclGroupSyntax, NamedDeclSyntax, WithModifiersSyntax {
+public protocol TypeDeclSyntax: DeclGroupSyntax, NamedDeclSyntax, BasicDeclSyntax {
 
     var isFinal: Bool { get }
 }

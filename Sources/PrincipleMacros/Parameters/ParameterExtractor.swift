@@ -10,7 +10,7 @@ import SwiftSyntax
 
 public struct ParameterExtractor {
 
-    private let arguments: LabeledExprListSyntax
+    private let arguments: LabeledExprListSyntax?
     private let trailingClosure: ClosureExprSyntax?
 
     public init(from node: some FreestandingMacroExpansionSyntax) {
@@ -18,20 +18,42 @@ public struct ParameterExtractor {
         self.trailingClosure = node.trailingClosure
     }
 
-    public func expression(withLabel label: TokenSyntax?) throws -> ExprSyntax {
-        let match = arguments.first { element in
-            element.label?.trimmedDescription == label?.trimmedDescription
+    public init(from node: AttributeSyntax) {
+        self.arguments = switch node.arguments {
+        case let .argumentList(arguments):
+            arguments
+        default:
+            nil
         }
-
-        guard let match else {
-            throw ParameterExtractionError.notFound
-        }
-
-        return match.expression.trimmed
+        self.trailingClosure = nil
     }
 
-    public func rawString(withLabel label: TokenSyntax?) throws -> String {
-        let rawString = try expression(withLabel: label)
+    public func expression(
+        withLabel label: TokenSyntax?
+    ) -> ExprSyntax? {
+        let match = arguments?.first { element in
+            element.label?.trimmedDescription == label?.trimmedDescription
+        }
+        return match?.expression.trimmed
+    }
+
+    public func trailingClosure(
+        withLabel label: TokenSyntax?
+    ) throws -> ExprSyntax? {
+        if let trailingClosure {
+            return ExprSyntax(trailingClosure)
+        }
+        return expression(withLabel: label)
+    }
+
+    public func rawString(
+        withLabel label: TokenSyntax?
+    ) throws -> String? {
+        guard let expression = expression(withLabel: label) else {
+            return nil
+        }
+
+        let rawString = expression
             .as(StringLiteralExprSyntax.self)?
             .representedLiteralValue
 
@@ -42,10 +64,24 @@ public struct ParameterExtractor {
         return rawString
     }
 
-    public func trailingClosure(withLabel label: TokenSyntax?) throws -> ExprSyntax {
-        if let trailingClosure {
-            return ExprSyntax(trailingClosure)
+    public func globalActorIsolationPreference(
+        withLabel label: TokenSyntax?
+    ) throws -> GlobalActorIsolationPreference? {
+        guard let expression = expression(withLabel: label) else {
+            return nil
         }
-        return try expression(withLabel: label)
+
+        if NilLiteralExprSyntax(expression) != nil {
+            return .nonisolated
+        }
+
+        if let memberAccessExpression = MemberAccessExprSyntax(expression),
+           let referenceExpression = DeclReferenceExprSyntax(memberAccessExpression.declName),
+           referenceExpression.baseName.tokenKind == .keyword(.self),
+           let baseType = memberAccessExpression.base {
+            return .isolated("\(baseType)")
+        }
+
+        throw ParameterExtractionError.unexpectedSyntaxType
     }
 }

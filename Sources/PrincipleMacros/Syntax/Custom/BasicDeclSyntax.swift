@@ -9,4 +9,5 @@
 import SwiftSyntax
 
 public typealias BasicDeclSyntax = DeclSyntaxProtocol
+    & WithAttributesSyntax
     & WithModifiersSyntax
