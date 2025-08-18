@@ -30,8 +30,8 @@ extension DeclBuilder {
         if let preferred = settings.preferredGlobalActorIsolation {
             return preferred
         }
-        if let inferred = basicDeclaration.globalActor?.attributeName {
-            return .isolated(inferred)
+        if let inferredType = basicDeclaration.globalActor?.attributeName.trimmed {
+            return .isolated(trimmedType: inferredType)
         }
         return .nonisolated
     }

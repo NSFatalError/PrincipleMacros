@@ -11,9 +11,9 @@ import SwiftSyntax
 public enum GlobalActorIsolation: Hashable {
 
     case nonisolated
-    case isolated(TypeSyntax)
+    case isolated(trimmedType: TypeSyntax)
 
-    public var type: TypeSyntax? {
+    public var trimmedType: TypeSyntax? {
         switch self {
         case let .isolated(type):
             type
@@ -22,10 +22,12 @@ public enum GlobalActorIsolation: Hashable {
         }
     }
 
-    public var attribute: AttributeSyntax? {
-        guard let type else {
+    public var trimmedAttribute: AttributeSyntax? {
+        guard let trimmedType else {
             return nil
         }
-        return AttributeSyntax(attributeName: type)
+        return AttributeSyntax(
+            attributeName: trimmedType
+        )
     }
 }

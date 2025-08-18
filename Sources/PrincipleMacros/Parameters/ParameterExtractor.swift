@@ -77,8 +77,8 @@ public struct ParameterExtractor {
 
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
            memberAccessExpression.declName.baseName.tokenKind == .keyword(.self),
-           let globalActor = memberAccessExpression.base?.trimmed {
-            return .isolated("\(globalActor)")
+           let explicitType = memberAccessExpression.base?.trimmed {
+            return .isolated(trimmedType: "\(explicitType)")
         }
 
         throw ParameterExtractionError.unexpectedSyntaxType
