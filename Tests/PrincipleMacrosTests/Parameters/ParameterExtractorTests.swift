@@ -100,7 +100,7 @@ extension ParameterExtractorTests {
     func testIsolatedPreferredGlobalActorExtraction(isolation: String) throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
         let extracted = try extractor.preferredGlobalActorIsolation(withLabel: "isolation")
-        #expect(extracted?.attribute?.description == "@\(isolation)")
+        #expect(extracted?.trimmedAttribute?.description == "@\(isolation)")
     }
 
     @Test
