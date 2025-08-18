@@ -15,7 +15,7 @@ public enum GlobalActorIsolation: Hashable {
 
     public var type: TypeSyntax? {
         switch self {
-        case .isolated(let type):
+        case let .isolated(type):
             type
         case .nonisolated:
             nil
