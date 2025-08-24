@@ -78,16 +78,16 @@ extension ParameterExtractorTests {
 extension ParameterExtractorTests {
 
     @Test
-    func testMissingPreferredGlobalActorExtraction() throws {
+    func testMissingGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro()")
-        let extracted = try extractor.preferredGlobalActorIsolation(withLabel: "isolation")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted == nil)
     }
 
     @Test
-    func testNonisolatedPreferredGlobalActorExtraction() throws {
+    func testExplicitNilGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
-        let extracted = try extractor.preferredGlobalActorIsolation(withLabel: "isolation")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted == .nonisolated)
     }
 
@@ -97,17 +97,17 @@ extension ParameterExtractorTests {
             "SomeType.SomeActor"
         ]
     )
-    func testIsolatedPreferredGlobalActorExtraction(isolation: String) throws {
+    func testGlobalActorExtraction(isolation: String) throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
-        let extracted = try extractor.preferredGlobalActorIsolation(withLabel: "isolation")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted?.trimmedType?.description == isolation)
     }
 
     @Test
-    func testUnexpectedSyntaxWhenPerformingPreferredGlobalActorExtraction() throws {
+    func testUnexpectedSyntaxWhenPerformingGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(isolation: MainActor.Type)"#)
         #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
-            try extractor.preferredGlobalActorIsolation(withLabel: "isolation")
+            try extractor.globalActorIsolation(withLabel: "isolation")
         }
     }
 }

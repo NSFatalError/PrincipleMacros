@@ -64,7 +64,7 @@ public struct ParameterExtractor {
         return rawString
     }
 
-    public func preferredGlobalActorIsolation(
+    public func globalActorIsolation(
         withLabel label: TokenSyntax?
     ) throws -> GlobalActorIsolation? {
         guard let expression = expression(withLabel: label) else {
