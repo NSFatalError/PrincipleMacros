@@ -27,5 +27,4 @@ extension AccessControlLevelInheritanceSettings {
         case member
         case peer
     }
-
 }

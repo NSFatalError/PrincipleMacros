@@ -28,7 +28,7 @@ extension DeclBuilder {
 
 extension DeclBuilder {
 
-    public var globalActorIsolation: ExplicitGlobalActorIsolation? {
+    public var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? {
         nil
     }
 
