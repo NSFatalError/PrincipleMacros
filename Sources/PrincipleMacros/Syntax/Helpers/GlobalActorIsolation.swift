@@ -10,13 +10,17 @@ import SwiftSyntax
 
 public struct GlobalActorIsolation: Hashable {
 
-    public let trimmedType: TypeSyntax
-
-    public var trimmedAttribute: AttributeSyntax {
-        AttributeSyntax(attributeName: trimmedType)
-    }
+    public let standardizedType: TypeSyntax
 
     public var inlinableAttribute: AttributeSyntax {
-        trimmedAttribute.withTrailingSpace
+        let attribute = AttributeSyntax(attributeName: standardizedType)
+        return attribute.withTrailingSpace
+    }
+}
+
+extension SyntaxStringInterpolation {
+
+    public mutating func appendInterpolation(_ isolation: GlobalActorIsolation?) {
+        appendInterpolation(isolation?.inlinableAttribute)
     }
 }

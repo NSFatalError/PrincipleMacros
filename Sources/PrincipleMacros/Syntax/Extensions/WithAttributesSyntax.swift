@@ -10,10 +10,15 @@ import SwiftSyntax
 
 extension WithAttributesSyntax {
 
-    public var globalActor: AttributeSyntax? {
-        attributes.attributeElements.first { attribute in
+    public var globalActorIsolation: GlobalActorIsolation? {
+        let attribute = attributes.attributeElements.first { attribute in
             attribute.attributeName.trimmedDescription.hasSuffix("Actor")
         }
+        if let attribute {
+            let standardizedType = attribute.attributeName.standardized
+            return GlobalActorIsolation(standardizedType: standardizedType)
+        }
+        return nil
     }
 }
 

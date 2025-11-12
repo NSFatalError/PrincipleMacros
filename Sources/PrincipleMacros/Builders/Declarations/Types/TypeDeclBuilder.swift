@@ -33,16 +33,15 @@ extension TypeDeclBuilder {
 
     public func buildExtension(of extendedType: some TypeSyntaxProtocol) throws -> MemberBlockSyntax {
         try TypeDeclBuilderContext.$current.withValue(
-            .extension(trimmedType: TypeSyntax(extendedType.trimmed)),
-            operation: {
-                try MemberBlockSyntax(
-                    members: MemberBlockItemListSyntax(
-                        build().map { decl in
-                            MemberBlockItemSyntax(decl: decl).withLeadingNewlines()
-                        }
-                    )
+            .extension(trimmedType: TypeSyntax(extendedType.trimmed))
+        ) {
+            try MemberBlockSyntax(
+                members: MemberBlockItemListSyntax(
+                    build().map { decl in
+                        MemberBlockItemSyntax(decl: decl).withLeadingNewlines()
+                    }
                 )
-            }
-        )
+            )
+        }
     }
 }

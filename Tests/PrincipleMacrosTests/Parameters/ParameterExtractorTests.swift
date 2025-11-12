@@ -80,14 +80,14 @@ extension ParameterExtractorTests {
     @Test
     func missingGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro()")
-        let extracted = try extractor.explicitGlobalActorIsolation(withLabel: "isolation")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted == nil)
     }
 
     @Test
     func explicitNilGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
-        let extracted = try extractor.explicitGlobalActorIsolation(withLabel: "isolation")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted == .nonisolated)
     }
 
@@ -99,15 +99,15 @@ extension ParameterExtractorTests {
     )
     func globalActorExtraction(isolation: String) throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
-        let extracted = try extractor.explicitGlobalActorIsolation(withLabel: "isolation")
-        #expect(extracted?.globalActor?.trimmedType.description == isolation)
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
+        #expect(extracted?.underlying?.standardizedType.description == isolation)
     }
 
     @Test
     func unexpectedSyntaxWhenPerformingGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(isolation: MainActor.Type)"#)
         #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
-            try extractor.explicitGlobalActorIsolation(withLabel: "isolation")
+            try extractor.globalActorIsolation(withLabel: "isolation")
         }
     }
 }

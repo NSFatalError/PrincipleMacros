@@ -11,10 +11,10 @@ public enum ExplicitGlobalActorIsolation: Hashable {
     case nonisolated
     case isolated(GlobalActorIsolation)
 
-    public var globalActor: GlobalActorIsolation? {
+    public var underlying: GlobalActorIsolation? {
         switch self {
-        case let .isolated(globalActor):
-            globalActor
+        case let .isolated(isolation):
+            isolation
         case .nonisolated:
             nil
         }

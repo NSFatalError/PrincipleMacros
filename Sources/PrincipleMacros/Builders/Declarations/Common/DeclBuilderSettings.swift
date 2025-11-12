@@ -11,14 +11,14 @@ import SwiftSyntax
 public struct DeclBuilderSettings {
 
     public var accessControlLevel: AccessControlLevel
-    public var explicitGlobalActorIsolation: ExplicitGlobalActorIsolation?
+    public var globalActorIsolation: ExplicitGlobalActorIsolation?
 
     public init(
         accessControlLevel: AccessControlLevel,
-        explicitGlobalActorIsolation: ExplicitGlobalActorIsolation? = nil
+        globalActorIsolation: ExplicitGlobalActorIsolation? = nil
     ) {
         self.accessControlLevel = accessControlLevel
-        self.explicitGlobalActorIsolation = explicitGlobalActorIsolation
+        self.globalActorIsolation = globalActorIsolation
     }
 }
 

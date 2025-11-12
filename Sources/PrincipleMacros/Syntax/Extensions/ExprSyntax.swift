@@ -134,6 +134,10 @@ extension GenericSpecializationExprSyntax {
 
 extension MemberAccessExprSyntax {
 
+    public var referencesBaseType: Bool {
+        declName.baseName.tokenKind == .keyword(.self)
+    }
+
     public var inferredType: TypeSyntax? {
         guard let first = base?.inferredType else {
             return nil

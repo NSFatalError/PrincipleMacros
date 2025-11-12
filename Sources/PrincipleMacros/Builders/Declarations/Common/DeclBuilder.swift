@@ -27,11 +27,11 @@ extension DeclBuilder {
     }
 
     public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        if let explicit = settings.explicitGlobalActorIsolation {
-            return explicit.globalActor
+        if let explicit = settings.globalActorIsolation?.underlying {
+            return explicit
         }
-        if let inherited = basicDeclaration.globalActor?.attributeName {
-            return GlobalActorIsolation(trimmedType: inherited.trimmed)
+        if let inherited = basicDeclaration.globalActorIsolation {
+            return inherited
         }
         return nil
     }
