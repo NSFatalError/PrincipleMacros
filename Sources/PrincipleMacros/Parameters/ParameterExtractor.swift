@@ -7,6 +7,7 @@
 //
 
 import SwiftSyntax
+import SwiftParser
 
 public struct ParameterExtractor {
 

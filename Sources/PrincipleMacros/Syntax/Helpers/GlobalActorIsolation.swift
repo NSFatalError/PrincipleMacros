@@ -25,7 +25,7 @@ extension GlobalActorIsolation {
 
     public static func resolved(
         for syntax: some WithAttributesSyntax,
-        preferred: ExplicitGlobalActorIsolation? = nil
+        preferred: ExplicitGlobalActorIsolation?
     ) -> Self? {
         if let preferred = preferred?.underlying {
             return preferred
