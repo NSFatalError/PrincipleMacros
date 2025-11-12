@@ -6,8 +6,8 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
 import SwiftParser
+import SwiftSyntax
 
 public struct ParameterExtractor {
 
