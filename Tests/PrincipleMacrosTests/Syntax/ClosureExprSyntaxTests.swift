@@ -9,9 +9,9 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct ClosureExprSyntaxTests {
+internal enum ClosureExprSyntaxTests {
 
-    struct SingleLine {
+    enum SingleLine {
 
         struct WithoutSignature {
 
@@ -20,7 +20,7 @@ internal struct ClosureExprSyntaxTests {
             """
 
             @Test
-            func testExpansion() throws {
+            func expansion() {
                 let closure = expr.expanded(nestingLevel: 2)
                 let interpolation: ExprSyntax = """
                 .init(
@@ -53,7 +53,7 @@ internal struct ClosureExprSyntaxTests {
             """
 
             @Test
-            func testExpansion() throws {
+            func expansion() {
                 let closure = expr.expanded(nestingLevel: 2)
                 let interpolation: ExprSyntax = """
                 .init(
@@ -94,7 +94,7 @@ internal struct ClosureExprSyntaxTests {
         """
 
         @Test
-        func testExpansion() throws {
+        func expansion() {
             let closure = expr.expanded(nestingLevel: 2)
             let interpolation: ExprSyntax = """
             .init(

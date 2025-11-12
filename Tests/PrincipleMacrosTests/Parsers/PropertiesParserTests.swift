@@ -15,7 +15,7 @@ internal struct PropertiesParserTests {
     private let context = BasicMacroExpansionContext()
 
     @Test
-    func testStoredLet() throws {
+    func storedLet() throws {
         let decl: DeclSyntax = """
         public internal(set) static let myLet: Int?
         """
@@ -32,7 +32,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testStoredVar() throws {
+    func storedVar() throws {
         let decl: DeclSyntax = """
         private(set) var myVar = "Hello, world!"
         """
@@ -49,7 +49,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testStoredVarWithObservers() throws {
+    func storedVarWithObservers() throws {
         let decl: DeclSyntax = """
         class var myObservedVar = UIView.Constraint.make() {
             willSet { print("willSet", newValue) }
@@ -70,7 +70,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testComputedVar() throws {
+    func computedVar() throws {
         let decl: DeclSyntax = """
         fileprivate var myComputedVar: [Model] { 
             [1, 2, 3] 
@@ -89,7 +89,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testComputedVarWithSetter() throws {
+    func computedVarWithSetter() throws {
         let decl: DeclSyntax = """
         static var mySettableVar: [Model]! { 
             get { _storage } 

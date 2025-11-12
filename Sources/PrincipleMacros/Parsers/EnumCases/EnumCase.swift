@@ -24,8 +24,10 @@ public final class EnumCase: ParserResult {
         self.element = element
         self.trimmedName = element.name.trimmed
 
-        self.associatedValues = element.parameterClause?
-            .parameters.enumerated()
+        self.associatedValues = element
+            .parameterClause?
+            .parameters
+            .enumerated()
             .map { .init($1, index: $0) }
             ?? []
     }

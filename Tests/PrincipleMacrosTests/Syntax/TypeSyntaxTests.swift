@@ -9,60 +9,60 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct TypeSyntaxTests {
+internal enum TypeSyntaxTests {
 
     struct Basic {
 
         @Test
-        func testOptionalLiteral() {
+        func optionalLiteral() {
             let type: TypeSyntax = "Int?"
             #expect(type.standardized.description == "Optional<Int>")
         }
 
         @Test
-        func testImplicitlyUnwrappedOptionalLiteral() {
+        func implicitlyUnwrappedOptionalLiteral() {
             let type: TypeSyntax = "String!"
             #expect(type.standardized.description == "Optional<String>")
         }
 
         @Test
-        func testArrayLiteral() {
+        func arrayLiteral() {
             let type: TypeSyntax = "[String]"
             #expect(type.standardized.description == "Array<String>")
         }
 
         @Test
-        func testDictionaryLiteral() {
+        func dictionaryLiteral() {
             let type: TypeSyntax = "[String: Int]"
             #expect(type.standardized.description == "Dictionary<String, Int>")
         }
 
         @Test
-        func testBasicType() {
+        func basicType() {
             let type: TypeSyntax = "UIView"
             #expect(type.standardized.description == "UIView")
         }
 
         @Test
-        func testMemberType() {
+        func memberType() {
             let type: TypeSyntax = "UIView.Constraints"
             #expect(type.standardized.description == "UIView.Constraints")
         }
 
         @Test
-        func testGenericType() {
+        func genericType() {
             let type: TypeSyntax = "Cache<String, Int>"
             #expect(type.standardized.description == "Cache<String, Int>")
         }
 
         @Test
-        func testVoidType() {
+        func voidType() {
             let type: TypeSyntax = "()"
             #expect(type.standardized.description == "Void")
         }
 
         @Test
-        func testTupleType() {
+        func tupleType() {
             let type: TypeSyntax = "(_ first: String, second: Int, Bool)"
             #expect(type.standardized.description == "(_ first: String, second: Int, Bool)")
         }
@@ -82,7 +82,7 @@ internal struct TypeSyntaxTests {
                 )
             ]
         )
-        func testComposition(type: String, expectation: String) {
+        func composition(type: String, expectation: String) {
             let type: TypeSyntax = "\(raw: type)"
             #expect(type.standardized.description == expectation)
         }

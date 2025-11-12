@@ -39,7 +39,7 @@ public struct ParameterExtractor {
 
     public func trailingClosure(
         withLabel label: TokenSyntax?
-    ) throws -> ExprSyntax? {
+    ) -> ExprSyntax? {
         if let trailingClosure {
             return ExprSyntax(trailingClosure)
         }
@@ -64,9 +64,9 @@ public struct ParameterExtractor {
         return rawString
     }
 
-    public func globalActorIsolation(
+    public func explicitGlobalActorIsolation(
         withLabel label: TokenSyntax?
-    ) throws -> GlobalActorIsolation? {
+    ) throws -> ExplicitGlobalActorIsolation? {
         guard let expression = expression(withLabel: label) else {
             return nil
         }
@@ -78,7 +78,8 @@ public struct ParameterExtractor {
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
            memberAccessExpression.declName.baseName.tokenKind == .keyword(.self),
            let explicitType = memberAccessExpression.base?.trimmed {
-            return .isolated(trimmedType: "\(explicitType)")
+            let globalActor = GlobalActorIsolation(trimmedType: "\(explicitType)")
+            return .isolated(globalActor)
         }
 
         throw ParameterExtractionError.unexpectedSyntaxType

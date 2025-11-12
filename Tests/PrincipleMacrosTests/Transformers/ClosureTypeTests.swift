@@ -12,7 +12,7 @@ import Testing
 internal struct ClosureTypeTests {
 
     @Test
-    func testUnnamedClosure() throws {
+    func unnamedClosure() throws {
         let type: TypeSyntax = "(Int?, [Bool]) async throws -> ()"
         let closure = try #require(ClosureType(type))
 
@@ -30,7 +30,7 @@ internal struct ClosureTypeTests {
     }
 
     @Test
-    func testNamedClosure() throws {
+    func namedClosure() throws {
         let type: TypeSyntax = "(_ value: Int!, _ argument: (first: String, [Int])) throws(SomeError) -> String?"
         let closure = try #require(ClosureType(type))
 
@@ -48,7 +48,7 @@ internal struct ClosureTypeTests {
     }
 
     @Test
-    func testMixedClosure() throws {
+    func mixedClosure() throws {
         let type: TypeSyntax = "(_ value: Bool, String.Key) -> Void"
         let closure = try #require(ClosureType(type))
 
@@ -66,7 +66,7 @@ internal struct ClosureTypeTests {
     }
 
     @Test
-    func testAttributedClosure() throws {
+    func attributedClosure() throws {
         let type: TypeSyntax = "@Sendable () -> Void"
         let closure = try #require(ClosureType(type))
         let attribute = try #require(closure.attributes.first)

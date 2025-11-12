@@ -25,21 +25,14 @@ extension DeclBuilder {
             maxAllowed: settings.maxAllowed
         )
     }
-}
-
-extension DeclBuilder {
 
     public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
         if let explicit = settings.explicitGlobalActorIsolation {
-            return explicit
+            return explicit.globalActor
         }
         if let inherited = basicDeclaration.globalActor?.attributeName {
-            return .isolated(trimmedType: inherited.trimmed)
+            return GlobalActorIsolation(trimmedType: inherited.trimmed)
         }
-        return .nonisolated
-    }
-
-    public var inheritedGlobalActorAttribute: AttributeSyntax? {
-        inheritedGlobalActorIsolation?.inlinableAttribute
+        return nil
     }
 }

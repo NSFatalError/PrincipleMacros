@@ -8,25 +8,15 @@
 
 import SwiftSyntax
 
-public enum GlobalActorIsolation: Hashable {
+public struct GlobalActorIsolation: Hashable {
 
-    case nonisolated
-    case isolated(trimmedType: TypeSyntax)
+    public let trimmedType: TypeSyntax
 
-    public var trimmedType: TypeSyntax? {
-        switch self {
-        case let .isolated(trimmedType):
-            trimmedType
-        case .nonisolated:
-            nil
-        }
+    public var trimmedAttribute: AttributeSyntax {
+        AttributeSyntax(attributeName: trimmedType)
     }
 
-    public var inlinableAttribute: AttributeSyntax? {
-        guard let trimmedType else {
-            return nil
-        }
-        let attribute = AttributeSyntax(attributeName: trimmedType)
-        return attribute.withTrailingSpace
+    public var inlinableAttribute: AttributeSyntax {
+        trimmedAttribute.withTrailingSpace
     }
 }
