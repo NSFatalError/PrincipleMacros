@@ -8,6 +8,5 @@
 
 public enum ParameterExtractionError: Error {
 
-    case notFound
     case unexpectedSyntaxType
 }
