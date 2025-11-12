@@ -11,7 +11,8 @@ import SwiftSyntax
 public protocol DeclBuilder {
 
     var basicDeclaration: any BasicDeclSyntax { get }
-    var settings: DeclBuilderSettings { get }
+    var globalActorIsolation: ExplicitGlobalActorIsolation? { get }
+    var accessControlLevelInheritanceSettings: AccessControlLevelInheritanceSettings { get }
 
     func build() throws -> [DeclSyntax]
 }
@@ -19,15 +20,20 @@ public protocol DeclBuilder {
 extension DeclBuilder {
 
     public var inheritedAccessControlLevel: TokenSyntax? {
-        let settings = settings.accessControlLevel
-        return basicDeclaration.inlinableAccessControlLevel(
-            inheritedBy: settings.inheritingDeclaration,
-            maxAllowed: settings.maxAllowed
+        basicDeclaration.inlinableAccessControlLevel(
+            inheritanceSettings: accessControlLevelInheritanceSettings
         )
+    }
+}
+
+extension DeclBuilder {
+
+    public var globalActorIsolation: ExplicitGlobalActorIsolation? {
+        nil
     }
 
     public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        if let explicit = settings.globalActorIsolation?.underlying {
+        if let explicit = globalActorIsolation?.underlying {
             return explicit
         }
         if let inherited = basicDeclaration.globalActorIsolation {
