@@ -18,6 +18,22 @@ public struct GlobalActorIsolation: Hashable {
     }
 }
 
+extension GlobalActorIsolation {
+
+    public static func resolved(
+        for syntax: some WithAttributesSyntax,
+        preferred: ExplicitGlobalActorIsolation? = nil
+    ) -> Self? {
+        if let preferred = preferred?.underlying {
+            return preferred
+        }
+        if let inherited = syntax.globalActorIsolation {
+            return inherited
+        }
+        return nil
+    }
+}
+
 extension SyntaxStringInterpolation {
 
     public mutating func appendInterpolation(_ isolation: GlobalActorIsolation?) {

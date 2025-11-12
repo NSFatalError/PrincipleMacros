@@ -11,7 +11,7 @@ import SwiftSyntax
 public protocol DeclBuilder {
 
     var basicDeclaration: any BasicDeclSyntax { get }
-    var globalActorIsolation: ExplicitGlobalActorIsolation? { get }
+    var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? { get }
     var accessControlLevelInheritanceSettings: AccessControlLevelInheritanceSettings { get }
 
     func build() throws -> [DeclSyntax]
@@ -33,12 +33,6 @@ extension DeclBuilder {
     }
 
     public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        if let explicit = globalActorIsolation?.underlying {
-            return explicit
-        }
-        if let inherited = basicDeclaration.globalActorIsolation {
-            return inherited
-        }
-        return nil
+        .resolved(for: basicDeclaration, preferred: preferredGlobalActorIsolation)
     }
 }
