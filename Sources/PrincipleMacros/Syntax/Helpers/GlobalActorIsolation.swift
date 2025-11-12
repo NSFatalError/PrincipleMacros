@@ -12,9 +12,12 @@ public struct GlobalActorIsolation: Hashable {
 
     public let standardizedType: TypeSyntax
 
+    public var standardizedAttribute: AttributeSyntax {
+        AttributeSyntax(attributeName: standardizedType)
+    }
+
     public var inlinableAttribute: AttributeSyntax {
-        let attribute = AttributeSyntax(attributeName: standardizedType)
-        return attribute.withTrailingSpace
+        standardizedAttribute.withTrailingSpace
     }
 }
 
