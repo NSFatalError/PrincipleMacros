@@ -17,6 +17,10 @@ let package = Package(
         .library(
             name: "PrincipleMacros",
             targets: ["PrincipleMacros"]
+        ),
+        .library(
+            name: "PrincipleMacrosTestSupport",
+            targets: ["PrincipleMacrosTestSupport"]
         )
     ],
     dependencies: [
@@ -31,6 +35,16 @@ let package = Package(
             dependencies: [
                 .product(
                     name: "SwiftSyntaxMacros",
+                    package: "swift-syntax"
+                )
+            ]
+        ),
+        .target(
+            name: "PrincipleMacrosTestSupport",
+            dependencies: [
+                "PrincipleMacros",
+                .product(
+                    name: "SwiftSyntaxMacrosTestSupport",
                     package: "swift-syntax"
                 )
             ]
