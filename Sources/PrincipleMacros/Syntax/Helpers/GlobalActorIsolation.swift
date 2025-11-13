@@ -24,7 +24,7 @@ public struct GlobalActorIsolation: Hashable {
 extension GlobalActorIsolation {
 
     public static func resolved(
-        for syntax: some WithAttributesSyntax,
+        for syntax: some TypeDeclSyntax,
         preferred: ExplicitGlobalActorIsolation?
     ) -> Self? {
         if let preferred = preferred?.underlying {
@@ -32,6 +32,24 @@ extension GlobalActorIsolation {
         }
         if let inherited = syntax.globalActorIsolation {
             return inherited
+        }
+        return nil
+    }
+
+    public static func resolved(
+        for syntax: some BasicDeclSyntax,
+        in lexicalContext: [Syntax],
+        preferred: ExplicitGlobalActorIsolation?
+    ) -> Self? {
+        if let preferred = preferred?.underlying {
+            return preferred
+        }
+        if let inherited = syntax.globalActorIsolation {
+            return inherited
+        }
+        if let declGroup = lexicalContext.first?.asProtocol((any DeclGroupSyntax).self),
+           let enclosing = declGroup.asProtocol((any WithAttributesSyntax).self)?.globalActorIsolation {
+            return enclosing
         }
         return nil
     }

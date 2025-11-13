@@ -18,6 +18,13 @@ extension TypeDeclBuilder {
     public var basicDeclaration: any BasicDeclSyntax {
         typeDeclaration
     }
+
+    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
+        .resolved(
+            for: typeDeclaration,
+            preferred: preferredGlobalActorIsolation
+        )
+    }
 }
 
 extension TypeDeclBuilder {
@@ -31,7 +38,9 @@ extension TypeDeclBuilder {
         }
     }
 
-    public func buildExtension(of extendedType: some TypeSyntaxProtocol) throws -> MemberBlockSyntax {
+    public func buildExtension(
+        of extendedType: some TypeSyntaxProtocol
+    ) throws -> MemberBlockSyntax {
         try TypeDeclBuilderContext.$current.withValue(
             .extension(trimmedType: TypeSyntax(extendedType.trimmed))
         ) {

@@ -31,8 +31,4 @@ extension DeclBuilder {
     public var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? {
         nil
     }
-
-    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        .resolved(for: basicDeclaration, preferred: preferredGlobalActorIsolation)
-    }
 }

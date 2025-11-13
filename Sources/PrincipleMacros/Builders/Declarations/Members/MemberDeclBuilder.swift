@@ -8,4 +8,18 @@
 
 import SwiftSyntaxMacros
 
-public protocol MemberDeclBuilder: DeclBuilder {}
+public protocol MemberDeclBuilder: DeclBuilder {
+
+    var lexicalContext: [Syntax] { get }
+}
+
+extension MemberDeclBuilder {
+
+    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
+        .resolved(
+            for: basicDeclaration,
+            in: lexicalContext,
+            preferred: preferredGlobalActorIsolation
+        )
+    }
+}
