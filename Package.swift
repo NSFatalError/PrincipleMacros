@@ -21,6 +21,10 @@ let package = Package(
         .library(
             name: "PrincipleMacrosTestSupport",
             targets: ["PrincipleMacrosTestSupport"]
+        ),
+        .library(
+            name: "PrincipleMacrosClientSupport",
+            targets: ["PrincipleMacrosClientSupport"]
         )
     ],
     dependencies: [
@@ -48,6 +52,9 @@ let package = Package(
                     package: "swift-syntax"
                 )
             ]
+        ),
+        .target(
+            name: "PrincipleMacrosClientSupport"
         ),
         .testTarget(
             name: "PrincipleMacrosTests",

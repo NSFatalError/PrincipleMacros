@@ -59,6 +59,33 @@ extension ParameterExtractorTests {
 
 extension ParameterExtractorTests {
 
+    @Test(
+        arguments: [
+            "private",
+            "fileprivate",
+            "internal",
+            "package",
+            "public",
+            "open"
+        ]
+    )
+    func accessControlLevelExtraction(_ level: String) throws {
+        let extractor = try makeExtractor(from: "#MyMacro(.\(raw: level))")
+        let extracted = try #require(try extractor.accessControlLevel(withLabel: nil))
+        #expect(String(describing: extracted).hasSuffix(level))
+    }
+
+    @Test
+    func unexpectedSyntaxWhenPerformingAccessControlLevelExtraction() throws {
+        let extractor = try makeExtractor(from: "#MyMacro(.didSet)")
+        #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
+            try extractor.accessControlLevel(withLabel: nil)
+        }
+    }
+}
+
+extension ParameterExtractorTests {
+
     @Test
     func rawStringExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(string: "arg")"#)
@@ -77,6 +104,18 @@ extension ParameterExtractorTests {
 
 extension ParameterExtractorTests {
 
+    @Test(
+        arguments: [
+            "MainActor",
+            "SomeType.SomeActor"
+        ]
+    )
+    func globalActorExtraction(_ isolation: String) throws {
+        let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
+        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
+        #expect(extracted?.underlying?.standardizedType.description == isolation)
+    }
+
     @Test
     func missingGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro()")
@@ -89,18 +128,6 @@ extension ParameterExtractorTests {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
         let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
         #expect(extracted == .nonisolated)
-    }
-
-    @Test(
-        arguments: [
-            "MainActor",
-            "SomeType.SomeActor"
-        ]
-    )
-    func globalActorExtraction(isolation: String) throws {
-        let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
-        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
-        #expect(extracted?.underlying?.standardizedType.description == isolation)
     }
 
     @Test
