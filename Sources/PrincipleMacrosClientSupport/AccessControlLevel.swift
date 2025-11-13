@@ -11,7 +11,7 @@ public enum AccessControlLevel: Hashable, Sendable {
     case `private`
     case `fileprivate`
     case `internal`
-    case `package`
+    case package
     case `public`
-    case `open`
+    case open
 }
