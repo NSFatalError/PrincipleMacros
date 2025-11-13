@@ -6,7 +6,6 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
 import SwiftSyntaxMacros
 
 public protocol Parser {

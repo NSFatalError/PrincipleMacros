@@ -1,5 +1,5 @@
 //
-//  ClosureTypeTests.swift
+//  ClosureTypeSyntaxTests.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 26/01/2025.
@@ -9,12 +9,12 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct ClosureTypeTests {
+internal struct ClosureTypeSyntaxTests {
 
     @Test
     func unnamedClosure() throws {
         let type: TypeSyntax = "(Int?, [Bool]) async throws -> ()"
-        let closure = try #require(ClosureType(type))
+        let closure = try #require(ClosureTypeSyntax(type))
 
         let parameter0 = try #require(closure.parameters.first)
         #expect(parameter0.standardizedName.description == "_0")
@@ -32,7 +32,7 @@ internal struct ClosureTypeTests {
     @Test
     func namedClosure() throws {
         let type: TypeSyntax = "(_ value: Int!, _ argument: (first: String, [Int])) throws(SomeError) -> String?"
-        let closure = try #require(ClosureType(type))
+        let closure = try #require(ClosureTypeSyntax(type))
 
         let parameter0 = try #require(closure.parameters.first)
         #expect(parameter0.standardizedName.description == "value")
@@ -50,7 +50,7 @@ internal struct ClosureTypeTests {
     @Test
     func mixedClosure() throws {
         let type: TypeSyntax = "(_ value: Bool, String.Key) -> Void"
-        let closure = try #require(ClosureType(type))
+        let closure = try #require(ClosureTypeSyntax(type))
 
         let parameter0 = try #require(closure.parameters.first)
         #expect(parameter0.standardizedName.description == "value")
@@ -68,7 +68,7 @@ internal struct ClosureTypeTests {
     @Test
     func attributedClosure() throws {
         let type: TypeSyntax = "@Sendable () -> Void"
-        let closure = try #require(ClosureType(type))
+        let closure = try #require(ClosureTypeSyntax(type))
         let attribute = try #require(closure.attributes.first)
         #expect(attribute.trimmedDescription == "@Sendable")
     }

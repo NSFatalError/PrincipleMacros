@@ -6,6 +6,8 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
+import SwiftSyntaxMacros
+
 public enum ExplicitGlobalActorIsolation: Hashable {
 
     case nonisolated

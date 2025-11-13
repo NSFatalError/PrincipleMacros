@@ -6,8 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftBasicFormat
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 extension ClosureExprSyntax {
 

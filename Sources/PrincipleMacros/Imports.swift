@@ -11,3 +11,4 @@
 @_documentation(visibility: private) @_exported import SwiftSyntax
 @_documentation(visibility: private) @_exported import SwiftSyntaxBuilder
 @_documentation(visibility: private) @_exported import SwiftSyntaxMacros
+@_documentation(visibility: private) @_exported import SwiftParser

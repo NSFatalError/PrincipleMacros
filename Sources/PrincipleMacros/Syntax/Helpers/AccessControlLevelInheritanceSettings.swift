@@ -6,7 +6,9 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-public struct AccessControlLevelInheritanceSettings {
+import SwiftSyntaxMacros
+
+public struct AccessControlLevelInheritanceSettings: Hashable {
 
     public var inheritingDeclaration: InheritingDeclaration
     public var maxAllowed: Keyword

@@ -1,15 +1,15 @@
 //
-//  ClosureType.swift
+//  ClosureTypeSyntax.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 26/01/2025.
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 @dynamicMemberLookup
-public struct ClosureType {
+public struct ClosureTypeSyntax {
 
     public let attributes: AttributeListSyntax
     public let function: FunctionTypeSyntax
@@ -49,7 +49,7 @@ public struct ClosureType {
     }
 }
 
-extension ClosureType {
+extension ClosureTypeSyntax {
 
     public struct Parameter {
 

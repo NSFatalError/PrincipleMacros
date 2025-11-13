@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 @dynamicMemberLookup
 public final class Property: ParserResult {
