@@ -8,10 +8,10 @@
 
 import SwiftSyntaxMacros
 
-public struct ParameterExtractor {
+public final class ParameterExtractor {
 
-    private let arguments: LabeledExprListSyntax?
-    private let trailingClosure: ClosureExprSyntax?
+    private var arguments: LabeledExprListSyntax?
+    private var trailingClosure: ClosureExprSyntax?
 
     public init(from node: some FreestandingMacroExpansionSyntax) {
         self.arguments = node.arguments
@@ -34,10 +34,18 @@ extension ParameterExtractor {
     public func expression(
         withLabel label: TokenSyntax?
     ) -> ExprSyntax? {
-        let match = arguments?.first { element in
-            element.label?.trimmedDescription == label?.trimmedDescription
+        guard let arguments else {
+            return nil
         }
-        return match?.expression.trimmed
+
+        for (index, element) in zip(arguments.indices, arguments) {
+            if element.label?.trimmedDescription == label?.trimmedDescription {
+                self.arguments?.remove(at: index)
+                return element.expression.trimmed
+            }
+        }
+
+        return nil
     }
 
     public func requiredExpression(
@@ -55,7 +63,7 @@ extension ParameterExtractor {
     public func trailingClosure(
         withLabel label: TokenSyntax?
     ) -> ExprSyntax? {
-        if let trailingClosure {
+        if let trailingClosure = trailingClosure.take() {
             return ExprSyntax(trailingClosure)
         }
         return expression(withLabel: label)

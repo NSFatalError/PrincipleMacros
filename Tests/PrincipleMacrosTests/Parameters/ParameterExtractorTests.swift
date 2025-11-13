@@ -33,6 +33,18 @@ internal struct ParameterExtractorTests {
     }
 
     @Test
+    func overlappingExpressionExtraction() throws {
+        let extractor = try makeExtractor(from: "#MyMacro(Type.make(), 123)")
+        let firstExtracted = extractor.expression(withLabel: nil)
+        let firstExpected: ExprSyntax = "Type.make()"
+        #expect(firstExtracted?.description == firstExpected.description)
+
+        let secondExtracted = extractor.expression(withLabel: nil)
+        let secondExpected: ExprSyntax = "123"
+        #expect(secondExtracted?.description == secondExpected.description)
+    }
+
+    @Test
     func missingExpressionExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(arg: Type.make())"#)
         let extracted = extractor.expression(withLabel: "value")
