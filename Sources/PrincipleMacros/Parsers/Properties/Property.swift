@@ -11,7 +11,7 @@ import SwiftSyntaxMacros
 @dynamicMemberLookup
 public final class Property: ParserResult {
 
-    public let declaration: VariableDeclSyntax
+    public let underlying: VariableDeclSyntax
     public let binding: PatternBindingSyntax
     public let trimmedName: TokenSyntax
     public let inferredType: TypeSyntax
@@ -27,7 +27,7 @@ public final class Property: ParserResult {
         name: TokenSyntax,
         inferredType: TypeSyntax
     ) {
-        self.declaration = declaration
+        self.underlying = declaration
         self.binding = binding
         self.trimmedName = name.trimmed
         self.inferredType = inferredType
@@ -74,7 +74,7 @@ public final class Property: ParserResult {
     }
 
     public subscript<T>(dynamicMember keyPath: KeyPath<VariableDeclSyntax, T>) -> T {
-        declaration[keyPath: keyPath]
+        underlying[keyPath: keyPath]
     }
 }
 
