@@ -8,12 +8,27 @@
 
 import SwiftSyntaxMacros
 
-public struct GlobalActorIsolation: Hashable {
+public enum GlobalActorIsolation {
 
-    public let standardizedType: TypeSyntax
+    case nonisolated(trimmedModifer: DeclModifierSyntax)
+    case isolated(standardizedType: TypeSyntax)
 
-    public var standardizedAttribute: AttributeSyntax {
-        AttributeSyntax(attributeName: standardizedType)
+    public var nonisolatedTrimmedModifier: DeclModifierSyntax? {
+        switch self {
+        case let .nonisolated(trimmedModifer):
+            trimmedModifer
+        default:
+            nil
+        }
+    }
+
+    public var isolatedStandardizedType: TypeSyntax? {
+        switch self {
+        case let .isolated(standardizedType):
+            standardizedType
+        default:
+            nil
+        }
     }
 }
 
@@ -21,7 +36,7 @@ extension GlobalActorIsolation {
 
     public static func resolved(
         for declaration: some TypeDeclSyntax,
-        preferred: ExplicitGlobalActorIsolation? = nil
+        preferred: Self? = nil
     ) -> Self? {
         _resolved(
             in: CollectionOfOne(Syntax(declaration)),
@@ -32,7 +47,7 @@ extension GlobalActorIsolation {
     public static func resolved(
         for declaration: some BasicDeclSyntax,
         in lexicalContext: [Syntax],
-        preferred: ExplicitGlobalActorIsolation? = nil
+        preferred: Self? = nil
     ) -> Self? {
         _resolved(
             in: CollectionOfOne(Syntax(declaration)) + lexicalContext,
@@ -42,15 +57,19 @@ extension GlobalActorIsolation {
 
     private static func _resolved(
         in fullContext: some Collection<Syntax>,
-        preferred: ExplicitGlobalActorIsolation?
+        preferred: Self?
     ) -> Self? {
-        if let preferred = preferred?.underlying {
+        if let preferred {
             return preferred
         }
 
         for syntax in fullContext {
             if let attributedSyntax = syntax.asProtocol((any WithAttributesSyntax).self),
                let inherited = attributedSyntax.globalActorIsolation {
+                return inherited
+            }
+            if let modifiedSyntax = syntax.asProtocol((any WithModifiersSyntax).self),
+               let inherited = modifiedSyntax.globalActorIsolation {
                 return inherited
             }
             if syntax.isProtocol((any DeclGroupSyntax).self) {
@@ -65,7 +84,14 @@ extension GlobalActorIsolation {
 extension SyntaxStringInterpolation {
 
     public mutating func appendInterpolation(_ isolation: GlobalActorIsolation?) {
-        let node = isolation?.standardizedAttribute.withTrailingSpace
-        appendInterpolation(node)
+        switch isolation {
+        case let .isolated(standardizedType):
+            let attribute = AttributeSyntax(attributeName: standardizedType)
+            appendInterpolation(attribute.withTrailingSpace)
+        case let .nonisolated(trimmedModifier):
+            appendInterpolation(trimmedModifier.withTrailingSpace)
+        case nil:
+            return
+        }
     }
 }

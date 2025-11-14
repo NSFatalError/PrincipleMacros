@@ -10,6 +10,19 @@ import SwiftSyntaxMacros
 
 extension WithModifiersSyntax {
 
+    public var globalActorIsolation: GlobalActorIsolation? {
+        let modifier = modifiers.first { modifier in
+            modifier.name.tokenKind == .keyword(.nonisolated)
+        }
+        if let modifier {
+            return .nonisolated(trimmedModifer: modifier.trimmed)
+        }
+        return nil
+    }
+}
+
+extension WithModifiersSyntax {
+
     public var accessControlLevel: AccessControlLevel? {
         accessControlLevel(detail: nil)
     }

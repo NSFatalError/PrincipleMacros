@@ -13,7 +13,7 @@ public protocol DeclBuilder {
     var basicDeclaration: any BasicDeclSyntax { get }
     var lexicalContext: [Syntax] { get }
 
-    var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? { get }
+    var preferredGlobalActorIsolation: GlobalActorIsolation? { get }
     var preferredAccessControlLevel: AccessControlLevel? { get }
     var maxAllowedAccessControlLevel: AccessControlLevel { get }
 
@@ -26,7 +26,7 @@ extension DeclBuilder {
         []
     }
 
-    public var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? {
+    public var preferredGlobalActorIsolation: GlobalActorIsolation? {
         nil
     }
 

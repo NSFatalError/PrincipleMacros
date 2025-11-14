@@ -11,6 +11,17 @@ import Testing
 
 internal enum GlobalActorIsolationTests {
 
+    internal struct Function {
+
+        @Test
+        func withNonisolatedNonsendingModifier() throws {
+            let decl: DeclSyntax = "nonisolated(nonsending) func test() {}"
+            let functionDecl = try #require(decl.as(FunctionDeclSyntax.self))
+            let isolation = GlobalActorIsolation.resolved(for: functionDecl, in: [])
+            #expect(isolation?.nonisolatedTrimmedModifier?.trimmedDescription == "nonisolated(nonsending)")
+        }
+    }
+
     internal struct Property {
 
         @Test
@@ -18,7 +29,7 @@ internal enum GlobalActorIsolationTests {
             let decl: DeclSyntax = "@MainActor var test = 123"
             let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
             let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: [])
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
         }
 
         @Test
@@ -30,13 +41,21 @@ internal enum GlobalActorIsolationTests {
         }
 
         @Test
+        func withNonisolatedModifier() throws {
+            let decl: DeclSyntax = "nonisolated var test = 123"
+            let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
+            let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: [])
+            #expect(isolation?.nonisolatedTrimmedModifier?.trimmedDescription == "nonisolated")
+        }
+
+        @Test
         func withoutGlobalActorInStructWithGlobalActor() throws {
             let decl: DeclSyntax = "var test = 123"
             let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
             let structDecl: DeclSyntax = "@MainActor struct MyStruct {}"
             let lexicalContext = [Syntax(structDecl)]
             let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: lexicalContext)
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
         }
 
         @Test
@@ -46,7 +65,17 @@ internal enum GlobalActorIsolationTests {
             let structDecl: DeclSyntax = "@MyActor struct MyStruct {}"
             let lexicalContext = [Syntax(structDecl)]
             let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: lexicalContext)
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
+        }
+
+        @Test
+        func withNonisolatedModifierInStructWithGlobalActor() throws {
+            let decl: DeclSyntax = "nonisolated var test = 123"
+            let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
+            let structDecl: DeclSyntax = "@MyActor struct MyStruct {}"
+            let lexicalContext = [Syntax(structDecl)]
+            let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: lexicalContext)
+            #expect(isolation?.nonisolatedTrimmedModifier?.trimmedDescription == "nonisolated")
         }
 
         @Test
@@ -57,7 +86,7 @@ internal enum GlobalActorIsolationTests {
             let structDecl2: DeclSyntax = "@MyActor struct Outer {}"
             let lexicalContext = [Syntax(structDecl1), Syntax(structDecl2)]
             let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: lexicalContext)
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
         }
 
         @Test
@@ -79,7 +108,7 @@ internal enum GlobalActorIsolationTests {
             let decl: DeclSyntax = "@MainActor class Model {}"
             let classDecl = try #require(decl.as(ClassDeclSyntax.self))
             let isolation = GlobalActorIsolation.resolved(for: classDecl)
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
         }
 
         @Test
@@ -107,7 +136,7 @@ internal enum GlobalActorIsolationTests {
             let structDecl: DeclSyntax = "@MyActor struct MyStruct {}"
             let lexicalContext = [Syntax(structDecl)]
             let isolation = GlobalActorIsolation.resolved(for: classDecl, in: lexicalContext)
-            #expect(isolation?.standardizedType.trimmedDescription == "MainActor")
+            #expect(isolation?.isolatedStandardizedType?.trimmedDescription == "MainActor")
         }
     }
 }

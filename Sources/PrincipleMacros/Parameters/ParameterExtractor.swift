@@ -156,20 +156,20 @@ extension ParameterExtractor {
 
     public func globalActorIsolation(
         withLabel label: TokenSyntax?
-    ) throws -> ExplicitGlobalActorIsolation? {
+    ) throws -> GlobalActorIsolation? {
         guard let expression = expression(withLabel: label) else {
             return nil
         }
 
         if NilLiteralExprSyntax(expression) != nil {
-            return .nonisolated
+            let isolation = DeclModifierSyntax(name: .keyword(.nonisolated))
+            return .nonisolated(trimmedModifer: isolation)
         }
 
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
            let explicitType = memberAccessExpression.base?.inferredType,
            memberAccessExpression.referencesBaseType {
-            let isolation = GlobalActorIsolation(standardizedType: explicitType)
-            return .isolated(isolation)
+            return .isolated(standardizedType: explicitType.standardized)
         }
 
         throw ParameterExtractionError.unexpectedSyntaxType
@@ -177,7 +177,7 @@ extension ParameterExtractor {
 
     public func requiredGlobalActorIsolation(
         withLabel label: TokenSyntax?
-    ) throws -> ExplicitGlobalActorIsolation {
+    ) throws -> GlobalActorIsolation {
         guard let isolation = try globalActorIsolation(withLabel: label) else {
             throw ParameterExtractionError.missingRequirement
         }
