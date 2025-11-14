@@ -38,7 +38,7 @@ extension TypeDeclBuilder {
         }
     }
 
-    public func buildExtension(
+    public func buildExtension( // TODO: CHECK
         of extendedType: some TypeSyntaxProtocol
     ) throws -> MemberBlockSyntax {
         try TypeDeclBuilderContext.$current.withValue(

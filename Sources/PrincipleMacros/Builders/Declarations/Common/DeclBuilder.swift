@@ -11,24 +11,30 @@ import SwiftSyntaxMacros
 public protocol DeclBuilder {
 
     var basicDeclaration: any BasicDeclSyntax { get }
+    var lexicalContext: [Syntax] { get }
+
     var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? { get }
-    var accessControlLevelInheritanceSettings: AccessControlLevelInheritanceSettings { get }
+    var preferredAccessControlLevel: AccessControlLevel? { get }
+    var maxAllowedAccessControlLevel: AccessControlLevel { get }
 
     func build() throws -> [DeclSyntax]
 }
 
 extension DeclBuilder {
 
-    public var inheritedAccessControlLevel: TokenSyntax? {
-        basicDeclaration.inlinableAccessControlLevel(
-            inheritanceSettings: accessControlLevelInheritanceSettings
-        )
+    public var lexicalContext: [Syntax] {
+        []
     }
-}
-
-extension DeclBuilder {
 
     public var preferredGlobalActorIsolation: ExplicitGlobalActorIsolation? {
         nil
+    }
+
+    public var preferredAccessControlLevel: AccessControlLevel? {
+        nil
+    }
+
+    public var maxAllowedAccessControlLevel: AccessControlLevel {
+        .public
     }
 }

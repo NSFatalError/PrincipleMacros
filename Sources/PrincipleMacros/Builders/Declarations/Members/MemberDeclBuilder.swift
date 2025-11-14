@@ -8,10 +8,7 @@
 
 import SwiftSyntaxMacros
 
-public protocol MemberDeclBuilder: DeclBuilder {
-
-    var lexicalContext: [Syntax] { get }
-}
+public protocol MemberDeclBuilder: DeclBuilder {}
 
 extension MemberDeclBuilder {
 
