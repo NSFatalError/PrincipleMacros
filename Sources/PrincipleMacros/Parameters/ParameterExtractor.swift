@@ -83,7 +83,7 @@ extension ParameterExtractor {
 
     public func accessControlLevel(
         withLabel label: TokenSyntax?
-    ) throws -> Keyword? {
+    ) throws -> AccessControlLevel? {
         guard let expression = expression(withLabel: label) else {
             return nil
         }
@@ -114,7 +114,7 @@ extension ParameterExtractor {
 
     public func requiredAccessControlLevel(
         withLabel label: TokenSyntax?
-    ) throws -> Keyword {
+    ) throws -> AccessControlLevel {
         guard let level = try accessControlLevel(withLabel: label) else {
             throw ParameterExtractionError.missingRequirement
         }
