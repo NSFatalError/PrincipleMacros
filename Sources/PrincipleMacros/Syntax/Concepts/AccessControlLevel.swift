@@ -79,8 +79,8 @@ extension AccessControlLevel {
 
     public static func forMember(
         of declaration: some TypeDeclSyntax,
-        preferred: Self?,
-        maxAllowed: Self
+        preferred: Self? = nil,
+        maxAllowed: Self = .public
     ) -> Self? {
         _resolved(
             from: declaration.accessControlLevel,
@@ -92,8 +92,8 @@ extension AccessControlLevel {
 
     public static func forSibling(
         of syntax: some WithModifiersSyntax,
-        preferred: Self?,
-        maxAllowed: Self
+        preferred: Self? = nil,
+        maxAllowed: Self = .public
     ) -> Self? {
         _resolved(
             from: syntax.accessControlLevel,
@@ -105,8 +105,8 @@ extension AccessControlLevel {
 
     public static func forPeer(
         of syntax: some WithModifiersSyntax,
-        preferred: Self?,
-        maxAllowed: Self
+        preferred: Self? = nil,
+        maxAllowed: Self = .public
     ) -> Self? {
         _resolved(
             from: syntax.accessControlLevel,

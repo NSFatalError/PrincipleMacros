@@ -21,7 +21,7 @@ extension GlobalActorIsolation {
 
     public static func resolved(
         for declaration: some TypeDeclSyntax,
-        preferred: ExplicitGlobalActorIsolation?
+        preferred: ExplicitGlobalActorIsolation? = nil
     ) -> Self? {
         _resolved(
             in: CollectionOfOne(Syntax(declaration)),
@@ -32,7 +32,7 @@ extension GlobalActorIsolation {
     public static func resolved(
         for declaration: some BasicDeclSyntax,
         in lexicalContext: [Syntax],
-        preferred: ExplicitGlobalActorIsolation?
+        preferred: ExplicitGlobalActorIsolation? = nil
     ) -> Self? {
         _resolved(
             in: CollectionOfOne(Syntax(declaration)) + lexicalContext,
