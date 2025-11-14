@@ -13,7 +13,7 @@ public enum GlobalActorIsolation {
     case nonisolated(trimmedModifer: DeclModifierSyntax)
     case isolated(standardizedType: TypeSyntax)
 
-    public var nonisolatedTrimmedModifier: DeclModifierSyntax? {
+    public var trimmedNonisolatedModifier: DeclModifierSyntax? {
         switch self {
         case let .nonisolated(trimmedModifer):
             trimmedModifer
@@ -22,13 +22,20 @@ public enum GlobalActorIsolation {
         }
     }
 
-    public var isolatedStandardizedType: TypeSyntax? {
+    public var standardizedIsolationType: TypeSyntax? {
         switch self {
         case let .isolated(standardizedType):
             standardizedType
         default:
             nil
         }
+    }
+
+    public var standardizedIsolationAttribute: AttributeSyntax? {
+        guard let standardizedIsolationType else {
+            return nil
+        }
+        return AttributeSyntax(attributeName: standardizedIsolationType)
     }
 }
 
@@ -84,14 +91,10 @@ extension GlobalActorIsolation {
 extension SyntaxStringInterpolation {
 
     public mutating func appendInterpolation(_ isolation: GlobalActorIsolation?) {
-        switch isolation {
-        case let .isolated(standardizedType):
-            let attribute = AttributeSyntax(attributeName: standardizedType)
+        if let attribute = isolation?.standardizedIsolationAttribute {
             appendInterpolation(attribute.withTrailingSpace)
-        case let .nonisolated(trimmedModifier):
-            appendInterpolation(trimmedModifier.withTrailingSpace)
-        case nil:
-            return
+        } else if let modifier = isolation?.trimmedNonisolatedModifier {
+            appendInterpolation(modifier.withTrailingSpace)
         }
     }
 }

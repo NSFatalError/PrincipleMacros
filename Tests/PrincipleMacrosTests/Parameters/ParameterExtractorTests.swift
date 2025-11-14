@@ -125,7 +125,7 @@ extension ParameterExtractorTests {
     func globalActorExtraction(_ isolation: String) throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: \(raw: isolation).self)")
         let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
-        #expect(extracted?.isolatedStandardizedType?.trimmedDescription == isolation)
+        #expect(extracted?.standardizedIsolationType?.trimmedDescription == isolation)
     }
 
     @Test
@@ -139,7 +139,7 @@ extension ParameterExtractorTests {
     func explicitNilGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
         let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
-        #expect(extracted?.nonisolatedTrimmedModifier?.trimmedDescription == "nonisolated")
+        #expect(extracted?.trimmedNonisolatedModifier?.trimmedDescription == "nonisolated")
     }
 
     @Test
