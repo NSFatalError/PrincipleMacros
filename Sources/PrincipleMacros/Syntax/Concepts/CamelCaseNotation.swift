@@ -56,12 +56,12 @@ public struct CamelCaseNotation {
         self.segments = segments.reversed()
     }
 
-    public mutating func removeFirst(_ k: Int) {
-        segments.removeFirst(min(k, segments.count))
+    public mutating func removeFirst(_ count: Int = 1) {
+        segments.removeFirst(min(count, segments.count))
     }
 
-    public mutating func removeLast(_ k: Int) {
-        segments.removeLast(min(k, segments.count))
+    public mutating func removeLast(_ count: Int = 1) {
+        segments.removeLast(min(count, segments.count))
     }
 
     public func joined(as spelling: Spelling) -> String {
