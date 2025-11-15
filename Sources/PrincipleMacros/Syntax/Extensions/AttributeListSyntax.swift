@@ -21,13 +21,17 @@ extension AttributeListSyntax {
         }
     }
 
-    public func contains(likeOneOf someAttributes: AttributeSyntax...) -> Bool {
-        attributeElements.contains { attribute in
-            someAttributes.contains { attribute.isLike($0) }
-        }
+    public func first(like other: AttributeSyntax) -> AttributeSyntax? {
+        attributeElements.first { $0.isLike(other) }
     }
 
-    public func contains(like someAttribute: AttributeSyntax) -> Bool {
-        contains(likeOneOf: someAttribute)
+    public func contains(like other: AttributeSyntax) -> Bool {
+        first(like: other) != nil
+    }
+
+    public func contains(likeOneOf other: AttributeSyntax...) -> Bool {
+        attributeElements.contains { attribute in
+            other.contains { attribute.isLike($0) }
+        }
     }
 }
