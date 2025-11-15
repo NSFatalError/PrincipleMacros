@@ -13,6 +13,10 @@ public struct CamelCaseNotation {
 
     public var segments: [Segment]
 
+    public init(segments: some Sequence<Segment>) {
+        self.segments = Array(segments)
+    }
+
     public init(string: String) {
         var segments = [Segment]()
         var segment: MutableSegment?
