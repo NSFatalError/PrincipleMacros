@@ -50,8 +50,12 @@ extension WithModifiersSyntax {
 
     public var typeScopeSpecifier: TokenSyntax? {
         modifiers.lazy.map(\.name).first { name in
-            name.tokenKind == .keyword(.static)
-                || name.tokenKind == .keyword(.class)
+            switch name.tokenKind {
+            case .keyword(.class), .keyword(.static):
+                true
+            default:
+                false
+            }
         }
     }
 }

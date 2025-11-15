@@ -38,11 +38,10 @@ extension ParameterExtractor {
             return nil
         }
 
-        for (index, element) in zip(arguments.indices, arguments) {
-            if element.label?.trimmedDescription == label?.trimmedDescription {
-                self.arguments?.remove(at: index)
-                return element.expression.trimmed
-            }
+        for (index, element) in zip(arguments.indices, arguments)
+            where element.label?.trimmedDescription == label?.trimmedDescription {
+            self.arguments?.remove(at: index)
+            return element.expression.trimmed
         }
 
         return nil
