@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -17,12 +17,20 @@ let package = Package(
         .library(
             name: "PrincipleMacros",
             targets: ["PrincipleMacros"]
+        ),
+        .library(
+            name: "PrincipleMacrosTestSupport",
+            targets: ["PrincipleMacrosTestSupport"]
+        ),
+        .library(
+            name: "PrincipleMacrosClientSupport",
+            targets: ["PrincipleMacrosClientSupport"]
         )
     ],
     dependencies: [
         .package(
             url: "https://github.com/swiftlang/swift-syntax",
-            "600.0.0" ..< "604.0.0"
+            "602.0.0" ..< "603.0.0"
         )
     ],
     targets: [
@@ -34,6 +42,19 @@ let package = Package(
                     package: "swift-syntax"
                 )
             ]
+        ),
+        .target(
+            name: "PrincipleMacrosTestSupport",
+            dependencies: [
+                "PrincipleMacros",
+                .product(
+                    name: "SwiftSyntaxMacrosTestSupport",
+                    package: "swift-syntax"
+                )
+            ]
+        ),
+        .target(
+            name: "PrincipleMacrosClientSupport"
         ),
         .testTarget(
             name: "PrincipleMacrosTests",
@@ -51,6 +72,8 @@ let package = Package(
 for target in package.targets {
     target.swiftSettings = (target.swiftSettings ?? []) + [
         .swiftLanguageMode(.v6),
-        .enableUpcomingFeature("ExistentialAny")
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault")
     ]
 }

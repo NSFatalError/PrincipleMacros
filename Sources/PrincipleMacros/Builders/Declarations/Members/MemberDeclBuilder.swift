@@ -6,6 +6,17 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 public protocol MemberDeclBuilder: DeclBuilder {}
+
+extension MemberDeclBuilder {
+
+    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
+        .resolved(
+            for: basicDeclaration,
+            in: lexicalContext,
+            preferred: preferredGlobalActorIsolation
+        )
+    }
+}

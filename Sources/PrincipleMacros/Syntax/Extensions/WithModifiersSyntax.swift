@@ -6,7 +6,39 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
+
+extension WithModifiersSyntax {
+
+    public var globalActorIsolation: GlobalActorIsolation? {
+        let modifier = modifiers.first { modifier in
+            modifier.name.tokenKind == .keyword(.nonisolated)
+        }
+        if let modifier {
+            return .nonisolated(trimmedModifer: modifier.trimmed)
+        }
+        return nil
+    }
+}
+
+extension WithModifiersSyntax {
+
+    public var accessControlLevel: AccessControlLevel? {
+        accessControlLevel(detail: nil)
+    }
+
+    public var setterAccessControlLevel: AccessControlLevel? {
+        accessControlLevel(detail: .identifier("set"))
+            ?? accessControlLevel
+    }
+
+    private func accessControlLevel(detail: TokenKind?) -> AccessControlLevel? {
+        modifiers.lazy
+            .filter { $0.detail?.detail.tokenKind == detail }
+            .compactMap { AccessControlLevel(tokenSyntax: $0.name) }
+            .first
+    }
+}
 
 extension WithModifiersSyntax {
 
@@ -18,83 +50,12 @@ extension WithModifiersSyntax {
 
     public var typeScopeSpecifier: TokenSyntax? {
         modifiers.lazy.map(\.name).first { name in
-            TokenKind.typeScopeSpecifiers.contains(name.tokenKind)
-        }
-    }
-}
-
-extension WithModifiersSyntax {
-
-    public var accessControlLevel: TokenSyntax? {
-        accessControlLevel(detail: nil)
-    }
-
-    public var setterAccessControlLevel: TokenSyntax? {
-        accessControlLevel(detail: .identifier("set")) ?? accessControlLevel
-    }
-
-    private func accessControlLevel(detail: TokenKind?) -> TokenSyntax? {
-        modifiers.lazy
-            .filter { $0.detail?.detail.tokenKind == detail }
-            .map(\.name)
-            .first { TokenKind.accessControlLevels.contains($0.tokenKind) }
-    }
-}
-
-extension WithModifiersSyntax {
-
-    public func inlinableAccessControlLevel(
-        inheritedBy inheritingDeclaration: InheritingDeclaration,
-        maxAllowed: Keyword
-    ) -> TokenSyntax? {
-        guard let accessControlLevel,
-              let index = TokenKind.accessControlLevels.firstIndex(of: accessControlLevel.tokenKind),
-              let maxAllowedIndex = Keyword.accessControlLevels.firstIndex(of: maxAllowed)
-        else {
-            return nil
-        }
-
-        guard index <= maxAllowedIndex else {
-            let tokenKind = TokenKind.accessControlLevels[maxAllowedIndex]
-            return TokenSyntax(tokenKind, presence: .present).withTrailingSpace
-        }
-
-        switch inheritingDeclaration {
-        case .member:
-            if let internalIndex = Keyword.accessControlLevels.firstIndex(of: .internal),
-               index <= internalIndex {
-                return nil
+            switch name.tokenKind {
+            case .keyword(.class), .keyword(.static):
+                true
+            default:
+                false
             }
-        case .peer:
-            break
         }
-
-        return accessControlLevel.trimmed.withTrailingSpace
     }
-}
-
-extension TokenKind {
-
-    fileprivate static let typeScopeSpecifiers = Keyword.typeScopeSpecifiers
-        .map(TokenKind.keyword)
-
-    fileprivate static let accessControlLevels = Keyword.accessControlLevels
-        .map(TokenKind.keyword)
-}
-
-extension Keyword {
-
-    fileprivate static let typeScopeSpecifiers: [Keyword] = [
-        .static,
-        .class
-    ]
-
-    fileprivate static let accessControlLevels: [Keyword] = [
-        .private,
-        .fileprivate,
-        .internal,
-        .package,
-        .public,
-        .open
-    ]
 }

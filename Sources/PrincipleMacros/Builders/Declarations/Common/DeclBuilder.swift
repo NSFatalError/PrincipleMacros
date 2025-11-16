@@ -6,40 +6,35 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 public protocol DeclBuilder {
 
     var basicDeclaration: any BasicDeclSyntax { get }
-    var settings: DeclBuilderSettings { get }
+    var lexicalContext: [Syntax] { get }
+
+    var preferredGlobalActorIsolation: GlobalActorIsolation? { get }
+    var preferredAccessControlLevel: AccessControlLevel? { get }
+    var maxAllowedAccessControlLevel: AccessControlLevel { get }
 
     func build() throws -> [DeclSyntax]
 }
 
 extension DeclBuilder {
 
-    public var inheritedAccessControlLevel: TokenSyntax? {
-        let settings = settings.accessControlLevel
-        return basicDeclaration.inlinableAccessControlLevel(
-            inheritedBy: settings.inheritingDeclaration,
-            maxAllowed: settings.maxAllowed
-        )
-    }
-}
-
-extension DeclBuilder {
-
-    public var inheritedGlobalActorIsolation: GlobalActorIsolation? {
-        if let explicit = settings.explicitGlobalActorIsolation {
-            return explicit
-        }
-        if let inherited = basicDeclaration.globalActor?.attributeName {
-            return .isolated(trimmedType: inherited.trimmed)
-        }
-        return .nonisolated
+    public var lexicalContext: [Syntax] {
+        []
     }
 
-    public var inheritedGlobalActorAttribute: AttributeSyntax? {
-        inheritedGlobalActorIsolation?.inlinableAttribute
+    public var preferredGlobalActorIsolation: GlobalActorIsolation? {
+        nil
+    }
+
+    public var preferredAccessControlLevel: AccessControlLevel? {
+        nil
+    }
+
+    public var maxAllowedAccessControlLevel: AccessControlLevel {
+        .public
     }
 }

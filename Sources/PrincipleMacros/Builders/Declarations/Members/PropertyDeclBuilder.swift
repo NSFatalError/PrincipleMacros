@@ -6,16 +6,16 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 public protocol PropertyDeclBuilder: MemberDeclBuilder {
 
-    var property: Property { get }
+    var declaration: Property { get }
 }
 
 extension PropertyDeclBuilder {
 
     public var basicDeclaration: any BasicDeclSyntax {
-        property.declaration
+        declaration.underlying
     }
 }

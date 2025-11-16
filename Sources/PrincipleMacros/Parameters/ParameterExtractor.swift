@@ -6,12 +6,12 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
-public struct ParameterExtractor {
+public final class ParameterExtractor {
 
-    private let arguments: LabeledExprListSyntax?
-    private let trailingClosure: ClosureExprSyntax?
+    private var arguments: LabeledExprListSyntax?
+    private var trailingClosure: ClosureExprSyntax?
 
     public init(from node: some FreestandingMacroExpansionSyntax) {
         self.arguments = node.arguments
@@ -27,24 +27,101 @@ public struct ParameterExtractor {
         }
         self.trailingClosure = nil
     }
+}
+
+extension ParameterExtractor {
 
     public func expression(
         withLabel label: TokenSyntax?
     ) -> ExprSyntax? {
-        let match = arguments?.first { element in
-            element.label?.trimmedDescription == label?.trimmedDescription
+        guard let arguments else {
+            return nil
         }
-        return match?.expression.trimmed
+
+        for (index, element) in zip(arguments.indices, arguments)
+            where element.label?.trimmedDescription == label?.trimmedDescription {
+            self.arguments?.remove(at: index)
+            return element.expression.trimmed
+        }
+
+        return nil
     }
+
+    public func requiredExpression(
+        withLabel label: TokenSyntax?
+    ) throws -> ExprSyntax {
+        guard let expression = expression(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return expression
+    }
+}
+
+extension ParameterExtractor {
 
     public func trailingClosure(
         withLabel label: TokenSyntax?
-    ) throws -> ExprSyntax? {
-        if let trailingClosure {
+    ) -> ExprSyntax? {
+        if let trailingClosure = trailingClosure.take() {
             return ExprSyntax(trailingClosure)
         }
         return expression(withLabel: label)
     }
+
+    public func requiredTrailingClosure(
+        withLabel label: TokenSyntax?
+    ) throws -> ExprSyntax {
+        guard let trailingClosure = trailingClosure(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return trailingClosure
+    }
+}
+
+extension ParameterExtractor {
+
+    public func accessControlLevel(
+        withLabel label: TokenSyntax?
+    ) throws -> AccessControlLevel? {
+        guard let expression = expression(withLabel: label) else {
+            return nil
+        }
+
+        let baseName = expression
+            .as(MemberAccessExprSyntax.self)?
+            .declName
+            .baseName
+            .trimmedDescription
+
+        switch baseName {
+        case "private":
+            return .private
+        case "fileprivate":
+            return .fileprivate
+        case "internal":
+            return .internal
+        case "package":
+            return .package
+        case "public":
+            return .public
+        case "open":
+            return .open
+        default:
+            throw ParameterExtractionError.unexpectedSyntaxType
+        }
+    }
+
+    public func requiredAccessControlLevel(
+        withLabel label: TokenSyntax?
+    ) throws -> AccessControlLevel {
+        guard let level = try accessControlLevel(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return level
+    }
+}
+
+extension ParameterExtractor {
 
     public func rawString(
         withLabel label: TokenSyntax?
@@ -64,6 +141,18 @@ public struct ParameterExtractor {
         return rawString
     }
 
+    public func requiredRawString(
+        withLabel label: TokenSyntax?
+    ) throws -> String {
+        guard let rawString = try rawString(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return rawString
+    }
+}
+
+extension ParameterExtractor {
+
     public func globalActorIsolation(
         withLabel label: TokenSyntax?
     ) throws -> GlobalActorIsolation? {
@@ -72,15 +161,25 @@ public struct ParameterExtractor {
         }
 
         if NilLiteralExprSyntax(expression) != nil {
-            return .nonisolated
+            let isolation = DeclModifierSyntax(name: .keyword(.nonisolated))
+            return .nonisolated(trimmedModifer: isolation)
         }
 
         if let memberAccessExpression = MemberAccessExprSyntax(expression),
-           memberAccessExpression.declName.baseName.tokenKind == .keyword(.self),
-           let explicitType = memberAccessExpression.base?.trimmed {
-            return .isolated(trimmedType: "\(explicitType)")
+           let explicitType = memberAccessExpression.base?.inferredType,
+           memberAccessExpression.referencesBaseType {
+            return .isolated(standardizedType: explicitType.standardized)
         }
 
         throw ParameterExtractionError.unexpectedSyntaxType
+    }
+
+    public func requiredGlobalActorIsolation(
+        withLabel label: TokenSyntax?
+    ) throws -> GlobalActorIsolation {
+        guard let isolation = try globalActorIsolation(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return isolation
     }
 }

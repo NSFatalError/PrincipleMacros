@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 extension ExprSyntax {
 
@@ -133,6 +133,10 @@ extension GenericSpecializationExprSyntax {
 }
 
 extension MemberAccessExprSyntax {
+
+    public var referencesBaseType: Bool {
+        declName.baseName.tokenKind == .keyword(.self)
+    }
 
     public var inferredType: TypeSyntax? {
         guard let first = base?.inferredType else {

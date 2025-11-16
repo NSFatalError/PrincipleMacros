@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 internal struct AssociatedValuesListExprBuilder<Expr>: ExprBuilder
 where Expr: ExprSyntaxProtocol {

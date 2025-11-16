@@ -18,7 +18,7 @@ internal struct EnumCaseCallExprBuilderTests {
     }
 
     @Test
-    func testCallWithoutAssociatedValues() throws {
+    func callWithoutAssociatedValues() throws {
         let enumCase = try makeEnumCase(from: "case first")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { _ in
             Issue.record()
@@ -28,7 +28,7 @@ internal struct EnumCaseCallExprBuilderTests {
     }
 
     @Test
-    func testCallWithUnnamedAssociatedValue() throws {
+    func callWithUnnamedAssociatedValue() throws {
         let enumCase = try makeEnumCase(from: "case second(Int)")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { _ in
             "123" as ExprSyntax
@@ -37,7 +37,7 @@ internal struct EnumCaseCallExprBuilderTests {
     }
 
     @Test
-    func testCallWithMultipleAssociatedValues() throws {
+    func callWithMultipleAssociatedValues() throws {
         let enumCase = try makeEnumCase(from: "case third(arg: String, Int)")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { associatedValue in
             if associatedValue.standardizedName.description == "arg" {

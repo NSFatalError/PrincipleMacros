@@ -18,4 +18,13 @@ extension MacroExpansionContext {
         let diagnostic = Diagnostic(node: node, message: message)
         diagnose(diagnostic)
     }
+
+    public func diagnose(
+        node: some SyntaxProtocol,
+        warningMessage: String
+    ) {
+        let message = MacroExpansionWarningMessage(warningMessage)
+        let diagnostic = Diagnostic(node: node, message: message)
+        diagnose(diagnostic)
+    }
 }

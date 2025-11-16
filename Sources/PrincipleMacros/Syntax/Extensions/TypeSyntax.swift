@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 extension TypeSyntax {
 
@@ -114,25 +114,18 @@ extension GenericArgumentClauseSyntax {
         GenericArgumentClauseSyntax(
             arguments: GenericArgumentListSyntax(
                 arguments.map { element in
-                    #if canImport(SwiftSyntax601)
-                        switch element.argument {
-                        case let .type(type):
-                            GenericArgumentSyntax(
-                                argument: .type(type.standardized),
-                                trailingComma: element.trailingComma?.trimmed.withTrailingSpace
-                            )
-                        default:
-                            GenericArgumentSyntax(
-                                argument: element.argument,
-                                trailingComma: element.trailingComma?.trimmed.withTrailingSpace
-                            )
-                        }
-                    #else
+                    switch element.argument {
+                    case let .type(type):
                         GenericArgumentSyntax(
-                            argument: element.argument.standardized,
+                            argument: .type(type.standardized),
                             trailingComma: element.trailingComma?.trimmed.withTrailingSpace
                         )
-                    #endif
+                    default:
+                        GenericArgumentSyntax(
+                            argument: element.argument,
+                            trailingComma: element.trailingComma?.trimmed.withTrailingSpace
+                        )
+                    }
                 }
             )
         )

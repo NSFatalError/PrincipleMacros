@@ -6,12 +6,12 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 @dynamicMemberLookup
 public final class EnumCase: ParserResult {
 
-    public let declaration: EnumCaseDeclSyntax
+    public let underlying: EnumCaseDeclSyntax
     public let element: EnumCaseElementSyntax
     public let trimmedName: TokenSyntax
     public let associatedValues: [AssociatedValue]
@@ -20,18 +20,20 @@ public final class EnumCase: ParserResult {
         declaration: EnumCaseDeclSyntax,
         element: EnumCaseElementSyntax
     ) {
-        self.declaration = declaration
+        self.underlying = declaration
         self.element = element
         self.trimmedName = element.name.trimmed
 
-        self.associatedValues = element.parameterClause?
-            .parameters.enumerated()
+        self.associatedValues = element
+            .parameterClause?
+            .parameters
+            .enumerated()
             .map { .init($1, index: $0) }
             ?? []
     }
 
     public subscript<T>(dynamicMember keyPath: KeyPath<EnumCaseDeclSyntax, T>) -> T {
-        declaration[keyPath: keyPath]
+        underlying[keyPath: keyPath]
     }
 }
 

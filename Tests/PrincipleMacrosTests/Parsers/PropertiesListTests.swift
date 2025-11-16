@@ -40,7 +40,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testImmutable() throws {
+    func immutable() {
         #expect(
             list.immutable.map(\.trimmedName.description) == [
                 "letProp",
@@ -52,7 +52,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testMutable() throws {
+    func mutable() {
         #expect(
             list.mutable.map(\.trimmedName.description) == [
                 "varProp",
@@ -64,7 +64,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testInstance() throws {
+    func instance() {
         #expect(
             list.instance.map(\.trimmedName.description) == [
                 "letProp",
@@ -77,7 +77,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testType() throws {
+    func type() {
         #expect(
             list.type.map(\.trimmedName.description) == [
                 "staticLetProp",
@@ -88,7 +88,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testStored() throws {
+    func stored() {
         #expect(
             list.stored.map(\.trimmedName.description) == [
                 "letProp",
@@ -101,7 +101,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testComputed() throws {
+    func computed() {
         #expect(
             list.computed.map(\.trimmedName.description) == [
                 "classVarProp",
@@ -112,7 +112,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testUniqueInferredTypes() throws {
+    func uniqueInferredTypes() {
         #expect(
             list.uniqueInferredTypes.map(\.description) == [
                 "Optional<Int>",
@@ -122,7 +122,7 @@ internal struct PropertiesListTests {
     }
 
     @Test
-    func testWithInferredType() throws {
+    func withInferredType() {
         #expect(
             list.withInferredType(like: "Int?").map(\.trimmedName.description) == [
                 "letProp",

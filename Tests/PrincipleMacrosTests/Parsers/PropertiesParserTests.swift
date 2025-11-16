@@ -15,15 +15,15 @@ internal struct PropertiesParserTests {
     private let context = BasicMacroExpansionContext()
 
     @Test
-    func testStoredLet() throws {
+    func storedLet() throws {
         let decl: DeclSyntax = """
         public internal(set) static let myLet: Int?
         """
         let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .immutable)
-        #expect(property.accessControlLevel?.trimmedDescription == "public")
-        #expect(property.setterAccessControlLevel?.trimmedDescription == "internal")
+        #expect(property.accessControlLevel == .public)
+        #expect(property.setterAccessControlLevel == .internal)
         #expect(property.typeScopeSpecifier?.trimmedDescription == "static")
         #expect(property.trimmedName.description == "myLet")
         #expect(property.inferredType.description == "Optional<Int>")
@@ -32,7 +32,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testStoredVar() throws {
+    func storedVar() throws {
         let decl: DeclSyntax = """
         private(set) var myVar = "Hello, world!"
         """
@@ -40,7 +40,7 @@ internal struct PropertiesParserTests {
         #expect(property.kind == .stored)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)
-        #expect(property.setterAccessControlLevel?.trimmedDescription == "private")
+        #expect(property.setterAccessControlLevel == .private)
         #expect(property.typeScopeSpecifier == nil)
         #expect(property.trimmedName.description == "myVar")
         #expect(property.inferredType.description == "String")
@@ -49,7 +49,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testStoredVarWithObservers() throws {
+    func storedVarWithObservers() throws {
         let decl: DeclSyntax = """
         class var myObservedVar = UIView.Constraint.make() {
             willSet { print("willSet", newValue) }
@@ -70,7 +70,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testComputedVar() throws {
+    func computedVar() throws {
         let decl: DeclSyntax = """
         fileprivate var myComputedVar: [Model] { 
             [1, 2, 3] 
@@ -79,8 +79,8 @@ internal struct PropertiesParserTests {
         let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
         #expect(property.kind == .computed)
         #expect(property.mutability == .immutable)
-        #expect(property.accessControlLevel?.trimmedDescription == "fileprivate")
-        #expect(property.setterAccessControlLevel?.trimmedDescription == "fileprivate")
+        #expect(property.accessControlLevel == .fileprivate)
+        #expect(property.setterAccessControlLevel == .fileprivate)
         #expect(property.typeScopeSpecifier == nil)
         #expect(property.trimmedName.description == "myComputedVar")
         #expect(property.inferredType.description == "Array<Model>")
@@ -89,7 +89,7 @@ internal struct PropertiesParserTests {
     }
 
     @Test
-    func testComputedVarWithSetter() throws {
+    func computedVarWithSetter() throws {
         let decl: DeclSyntax = """
         static var mySettableVar: [Model]! { 
             get { _storage } 

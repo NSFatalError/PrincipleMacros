@@ -9,84 +9,84 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct ExprSyntaxTests {
+internal enum ExprSyntaxTests {
 
     struct Basic {
 
         @Test
-        func testOptionalLiteral() {
+        func optionalLiteral() {
             let expr: ExprSyntax = "Int?"
             #expect(expr.inferredType?.description == "Optional<Int>")
         }
 
         @Test
-        func testIntegerLiteral() {
+        func integerLiteral() {
             let expr: ExprSyntax = "123"
             #expect(expr.inferredType?.description == "Int")
         }
 
         @Test
-        func testFloatLiteral() {
+        func floatLiteral() {
             let expr: ExprSyntax = "1.23"
             #expect(expr.inferredType?.description == "Double")
         }
 
         @Test
-        func testBoolLiteral() {
+        func boolLiteral() {
             let expr: ExprSyntax = "false"
             #expect(expr.inferredType?.description == "Bool")
         }
 
         @Test
-        func testStringLiteral() {
+        func stringLiteral() {
             let expr: ExprSyntax = "\"Hello\""
             #expect(expr.inferredType?.description == "String")
         }
 
         @Test
-        func testArrayLiteral() {
+        func arrayLiteral() {
             let expr: ExprSyntax = "[String]"
             #expect(expr.inferredType?.description == "Array<String>")
         }
 
         @Test
-        func testDictionaryLiteral() {
+        func dictionaryLiteral() {
             let expr: ExprSyntax = "[String: Int]"
             #expect(expr.inferredType?.description == "Dictionary<String, Int>")
         }
 
         @Test
-        func testInitializer() {
+        func initializer() {
             let expr: ExprSyntax = "UIView()"
             #expect(expr.inferredType?.description == "UIView")
         }
 
         @Test
-        func testGenericInitializer() {
+        func genericInitializer() {
             let expr: ExprSyntax = "Dictionary<String, Int>()"
             #expect(expr.inferredType?.description == "Dictionary<String, Int>")
         }
 
         @Test
-        func testMemberAccess() {
+        func memberAccess() {
             let expr: ExprSyntax = "Options.first"
             #expect(expr.inferredType?.description == "Options")
         }
 
         @Test
-        func testFunctionCall() {
+        func functionCall() {
             let expr: ExprSyntax = "Model.create(arg: true)"
             #expect(expr.inferredType?.description == "Model")
         }
 
         @Test
-        func testNestedFunctionCall() {
+        func nestedFunctionCall() {
             let expr: ExprSyntax = "Model.Default.create()"
             #expect(expr.inferredType?.description == "Model.Default")
         }
 
         @Test
-        func testTypeReference() {
+        func typeReference() {
             let expr: ExprSyntax = "Model.self"
             #expect(expr.inferredType?.description == "Model.Type")
         }
@@ -106,7 +106,7 @@ internal struct ExprSyntaxTests {
                 )
             ]
         )
-        func testComposition(expr: String, expectation: String) {
+        func composition(expr: String, expectation: String) {
             let expr: ExprSyntax = "\(raw: expr)"
             #expect(expr.inferredType?.description == expectation)
         }
