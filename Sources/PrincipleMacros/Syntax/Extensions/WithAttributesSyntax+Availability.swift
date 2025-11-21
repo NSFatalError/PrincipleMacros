@@ -28,11 +28,11 @@ extension AttributeListSyntax.Element {
 
     var availability: Self? {
         switch self {
-        case .attribute(let attribute):
+        case let .attribute(attribute):
             if let availability = attribute.availability {
                 return .attribute(availability)
             }
-        case .ifConfigDecl(let ifConfig):
+        case let .ifConfigDecl(ifConfig):
             if let availability = ifConfig.availability {
                 return .ifConfigDecl(availability)
             }

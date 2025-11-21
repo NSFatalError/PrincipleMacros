@@ -25,9 +25,9 @@ extension IfConfigClauseSyntax {
 
     var availability: Self? {
         if let availability = elements?.availability {
-            return with(\.elements, availability)
+            with(\.elements, availability)
         } else {
-            return nil
+            nil
         }
     }
 }
@@ -36,7 +36,7 @@ extension IfConfigClauseSyntax.Elements {
 
     var availability: Self? {
         switch self {
-        case .attributes(let attributes):
+        case let .attributes(attributes):
             if let availability = attributes.availability {
                 return .attributes(availability)
             }
