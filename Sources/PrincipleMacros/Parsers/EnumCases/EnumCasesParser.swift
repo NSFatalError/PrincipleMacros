@@ -8,7 +8,7 @@
 
 import SwiftSyntaxMacros
 
-public enum EnumCasesParser: _Parser {
+public enum EnumCasesParser: Parser {
 
     public static func parse(
         declaration: some DeclSyntaxProtocol,

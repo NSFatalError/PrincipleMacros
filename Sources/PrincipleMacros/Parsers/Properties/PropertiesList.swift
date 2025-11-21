@@ -8,11 +8,11 @@
 
 import SwiftSyntaxMacros
 
-public struct PropertiesList: _ParserResultsCollection {
+public struct PropertiesList: ParserResultsCollection {
 
     public let all: [Property]
 
-    init(_ all: [Property]) {
+    public init(_ all: [Property]) {
         self.all = all
     }
 }

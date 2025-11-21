@@ -11,10 +11,16 @@ where Element: ParserResult {
 
     associatedtype Element
 
+    init(_ all: [Element])
+    
     var all: [Element] { get }
 }
 
 extension ParserResultsCollection {
+
+    public init() {
+        self.init([])
+    }
 
     public var startIndex: Int {
         all.startIndex

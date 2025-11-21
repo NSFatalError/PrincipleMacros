@@ -22,3 +22,17 @@ public protocol Parser {
         in context: some MacroExpansionContext
     ) -> ResultsCollection
 }
+
+extension Parser {
+
+    public static func parse(
+        memberBlock: MemberBlockSyntax,
+        in context: some MacroExpansionContext
+    ) -> ResultsCollection {
+        ResultsCollection(
+            memberBlock.members.flatMap { member in
+                parse(declaration: member.decl, in: context)
+            }
+        )
+    }
+}

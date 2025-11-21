@@ -34,8 +34,8 @@ extension DeclModifierSyntax {
             ?? accessControlLevel
     }
 
-    private func accessControlLevel(detail: TokenKind?) -> AccessControlLevel? {
-        if self.detail?.detail.tokenKind == detail {
+    private func accessControlLevel(detail detailTokenKind: TokenKind?) -> AccessControlLevel? {
+        if detail?.detail.tokenKind == detailTokenKind {
             return AccessControlLevel(tokenSyntax: name)
         }
         return nil

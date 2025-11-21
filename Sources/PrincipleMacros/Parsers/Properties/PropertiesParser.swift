@@ -8,7 +8,7 @@
 
 import SwiftSyntaxMacros
 
-public enum PropertiesParser: _Parser {
+public enum PropertiesParser: Parser {
 
     public static func parse(
         declaration: some DeclSyntaxProtocol,
