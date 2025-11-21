@@ -11,13 +11,9 @@ import SwiftSyntaxMacros
 extension WithModifiersSyntax {
 
     public var globalActorIsolation: GlobalActorIsolation? {
-        let modifier = modifiers.first { modifier in
-            modifier.name.tokenKind == .keyword(.nonisolated)
-        }
-        if let modifier {
-            return .nonisolated(trimmedModifer: modifier.trimmed)
-        }
-        return nil
+        modifiers.lazy
+            .compactMap(\.globalActorIsolation)
+            .first
     }
 }
 
@@ -34,28 +30,68 @@ extension WithModifiersSyntax {
 
     private func accessControlLevel(detail: TokenKind?) -> AccessControlLevel? {
         modifiers.lazy
-            .filter { $0.detail?.detail.tokenKind == detail }
-            .compactMap { AccessControlLevel(tokenSyntax: $0.name) }
+            .compactMap { $0.accessControlLevel(detail: detail) }
             .first
     }
 }
 
 extension WithModifiersSyntax {
 
+    public var overrideSpecifier: TokenSyntax? {
+        modifiers.lazy
+            .compactMap(\.overrideSpecifier)
+            .first
+    }
+
     public var finalSpecifier: TokenSyntax? {
-        modifiers.lazy.map(\.name).first { name in
-            name.tokenKind == .keyword(.final)
-        }
+        modifiers.lazy
+            .compactMap(\.finalSpecifier)
+            .first
     }
 
     public var typeScopeSpecifier: TokenSyntax? {
-        modifiers.lazy.map(\.name).first { name in
-            switch name.tokenKind {
-            case .keyword(.class), .keyword(.static):
-                true
-            default:
-                false
-            }
+        modifiers.lazy
+            .compactMap(\.typeScopeSpecifier)
+            .first
+    }
+}
+
+extension DeclModifierSyntax {
+
+    public var globalActorIsolation: GlobalActorIsolation? {
+        if name.tokenKind == .keyword(.nonisolated) {
+            return .nonisolated(trimmedModifer: trimmed)
+        }
+        return nil
+    }
+}
+
+extension DeclModifierSyntax {
+
+    public func accessControlLevel(detail: TokenKind?) -> AccessControlLevel? {
+        if self.detail?.detail.tokenKind == detail {
+            return AccessControlLevel(tokenSyntax: name)
+        }
+        return nil
+    }
+}
+
+extension DeclModifierSyntax {
+
+    public var overrideSpecifier: TokenSyntax? {
+        name.tokenKind == .keyword(.override) ? name : nil
+    }
+
+    public var finalSpecifier: TokenSyntax? {
+        name.tokenKind == .keyword(.final) ? name : nil
+    }
+
+    public var typeScopeSpecifier: TokenSyntax? {
+        switch name.tokenKind {
+        case .keyword(.class), .keyword(.static):
+            name
+        default:
+            nil
         }
     }
 }
