@@ -1,5 +1,5 @@
 //
-//  IfConfigDeclSyntax.swift
+//  IfConfigDeclSyntax+Availability.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 21/11/2025.

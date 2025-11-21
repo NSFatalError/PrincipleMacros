@@ -9,8 +9,6 @@
 @testable import PrincipleMacros
 import Testing
 
-// swiftlint:disable empty_line_after_type_declaration
-
 internal struct ClassDeclSyntaxTests {
 
     @Test
@@ -28,6 +26,8 @@ internal struct ClassDeclSyntaxTests {
         let result = classDecl.inferredSuperclass()
         #expect(result == nil)
     }
+
+    // swiftlint:disable empty_line_after_type_declaration
 
     @Test
     func withOverrideModifier() throws {
@@ -71,6 +71,6 @@ internal struct ClassDeclSyntaxTests {
         let result = classDecl.inferredSuperclass()
         #expect(result == nil)
     }
-}
 
-// swiftlint:enable empty_line_after_type_declaration
+    // swiftlint:enable empty_line_after_type_declaration
+}
