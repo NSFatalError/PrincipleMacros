@@ -19,7 +19,7 @@ extension WithModifiersSyntax {
     public var setterAccessControlLevel: AccessControlLevel? {
         modifiers.lazy
             .compactMap(\.setterAccessControlLevel)
-            .first
+            .first ?? accessControlLevel
     }
 }
 
@@ -31,7 +31,6 @@ extension DeclModifierSyntax {
 
     public var setterAccessControlLevel: AccessControlLevel? {
         accessControlLevel(detail: .identifier("set"))
-            ?? accessControlLevel
     }
 
     private func accessControlLevel(detail detailTokenKind: TokenKind?) -> AccessControlLevel? {
