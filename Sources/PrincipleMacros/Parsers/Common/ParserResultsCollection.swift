@@ -11,16 +11,12 @@ where Element: ParserResult {
 
     associatedtype Element
 
-    init(_ all: [Element])
-
     var all: [Element] { get }
+
+    init(_ all: [Element])
 }
 
 extension ParserResultsCollection {
-
-    public init() {
-        self.init([])
-    }
 
     public var startIndex: Int {
         all.startIndex
@@ -28,6 +24,10 @@ extension ParserResultsCollection {
 
     public var endIndex: Int {
         all.endIndex
+    }
+
+    public init() {
+        self.init([])
     }
 
     public subscript(position: Int) -> Element {

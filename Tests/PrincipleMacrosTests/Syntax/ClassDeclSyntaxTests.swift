@@ -9,6 +9,8 @@
 @testable import PrincipleMacros
 import Testing
 
+// swiftlint:disable empty_line_after_type_declaration
+
 internal enum ClassDeclSyntaxTests {
 
     struct NoInheritanceClause {
@@ -97,3 +99,5 @@ internal enum ClassDeclSyntaxTests {
         }
     }
 }
+
+// swiftlint:enable empty_line_after_type_declaration

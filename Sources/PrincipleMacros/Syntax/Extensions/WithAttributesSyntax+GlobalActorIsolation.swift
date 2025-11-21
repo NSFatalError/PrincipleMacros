@@ -1,5 +1,5 @@
 //
-//  WithAttributesSyntax.swift
+//  WithAttributesSyntax+GlobalActorIsolation.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 17/01/2025.

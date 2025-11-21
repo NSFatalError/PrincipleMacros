@@ -1,5 +1,5 @@
 //
-//  WithAttributesSyntax.swift
+//  WithAttributesSyntax+Availability.swift
 //  PrincipleMacros
 //
 //  Created by Kamil Strzelecki on 17/01/2025.
