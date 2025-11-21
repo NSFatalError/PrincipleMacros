@@ -11,7 +11,7 @@ import Testing
 
 internal struct EnumCaseCallExprBuilderTests {
 
-    func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
+    private func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
         let enumCaseDecl = try #require(EnumCaseDeclSyntax(decl))
         let enumElement = try #require(enumCaseDecl.elements.first)
         return EnumCase(declaration: enumCaseDecl, element: enumElement)
