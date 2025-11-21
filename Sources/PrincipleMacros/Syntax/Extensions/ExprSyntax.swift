@@ -66,10 +66,14 @@ extension StringLiteralExprSyntax {
 extension OptionalChainingExprSyntax {
 
     public var inferredType: TypeSyntax? {
-        guard let inferredType = expression.inferredType else {
+        guard let inferredWrappedType else {
             return nil
         }
-        return "Optional<\(inferredType)>"
+        return "Optional<\(inferredWrappedType)>"
+    }
+
+    public var inferredWrappedType: TypeSyntax? {
+        expression.inferredType
     }
 }
 
