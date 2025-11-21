@@ -12,7 +12,7 @@ where Element: ParserResult {
     associatedtype Element
 
     init(_ all: [Element])
-    
+
     var all: [Element] { get }
 }
 
