@@ -48,7 +48,7 @@ extension ClassDeclSyntax {
             return .visitChildren
         }
 
-        override func visit(_ node: SuperExprSyntax) -> SyntaxVisitorContinueKind {
+        override func visit(_: SuperExprSyntax) -> SyntaxVisitorContinueKind {
             didVerify = true
             return .visitChildren
         }
