@@ -11,8 +11,7 @@ import SwiftSyntaxMacros
 extension WithAttributesSyntax {
 
     var availability: AttributeListSyntax? {
-        let availability = attributes.compactMap(\.availability)
-        return availability.isEmpty ? nil : AttributeListSyntax(availability)
+        attributes.availability
     }
 }
 

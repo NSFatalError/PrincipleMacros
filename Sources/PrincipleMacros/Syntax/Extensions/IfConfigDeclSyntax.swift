@@ -16,7 +16,7 @@ extension IfConfigDeclSyntax {
             return nil
         }
 
-        elements[0] = first.detached.with(\.poundKeyword, .poundIfToken())
+        elements[0] = first.with(\.poundKeyword, .poundIfToken())
         return with(\.clauses, IfConfigClauseListSyntax(elements))
     }
 }

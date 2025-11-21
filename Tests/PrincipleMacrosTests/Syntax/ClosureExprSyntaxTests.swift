@@ -9,80 +9,69 @@
 @testable import PrincipleMacros
 import Testing
 
-internal enum ClosureExprSyntaxTests {
+internal struct ClosureExprSyntaxTests {
 
-    enum SingleLine {
+    @Test
+    func withoutSignature() {
+        let expr: ExprSyntax = """
+        { Date.now }
+        """
 
-        struct WithoutSignature {
+        let interpolation: ExprSyntax = """
+        .init(
+            parameter: .init(
+                closure: \(expr.expanded(nestingLevel: 2)),
+                value: "Foo"
+            )
+        )
+        """
 
-            private let expr: ExprSyntax = """
-            { Date.now }
-            """
+        let expectation = """
+        .init(
+            parameter: .init(
+                closure: {
+                    Date.now
+                },
+                value: "Foo"
+            )
+        )
+        """
 
-            @Test
-            func expansion() {
-                let closure = expr.expanded(nestingLevel: 2)
-                let interpolation: ExprSyntax = """
-                .init(
-                    parameter: .init(
-                        closure: \(closure),
-                        value: "Foo"
-                    )
-                )
-                """
-
-                let expectation = """
-                .init(
-                    parameter: .init(
-                        closure: {
-                            Date.now
-                        },
-                        value: "Foo"
-                    )
-                )
-                """
-
-                #expect(interpolation.description == expectation)
-            }
-        }
-
-        struct WithSignature {
-
-            private let expr: ExprSyntax = """
-            { [weak self] arg0, _ -> String in arg0 }
-            """
-
-            @Test
-            func expansion() {
-                let closure = expr.expanded(nestingLevel: 2)
-                let interpolation: ExprSyntax = """
-                .init(
-                    parameter: .init(
-                        closure: \(closure),
-                        value: "Foo"
-                    )
-                )
-                """
-
-                let expectation = """
-                .init(
-                    parameter: .init(
-                        closure: { [weak self] arg0, _ -> String in
-                            arg0
-                        },
-                        value: "Foo"
-                    )
-                )
-                """
-
-                #expect(interpolation.description == expectation)
-            }
-        }
+        #expect(interpolation.description == expectation)
     }
 
-    struct MultiLine {
+    @Test
+    func withSignature() {
+        let expr: ExprSyntax = """
+        { [weak self] arg0, _ -> String in arg0 }
+        """
 
-        private let expr: ExprSyntax = """
+        let interpolation: ExprSyntax = """
+        .init(
+            parameter: .init(
+                closure: \(expr.expanded(nestingLevel: 2)),
+                value: "Foo"
+            )
+        )
+        """
+
+        let expectation = """
+        .init(
+            parameter: .init(
+                closure: { [weak self] arg0, _ -> String in
+                    arg0
+                },
+                value: "Foo"
+            )
+        )
+        """
+
+        #expect(interpolation.description == expectation)
+    }
+
+    @Test
+    func multiline() {
+        let expr: ExprSyntax = """
         { [weak self] arg0, arg1 -> String in
             if arg0 > 0 {
                 return String(arg0)
@@ -93,35 +82,31 @@ internal enum ClosureExprSyntaxTests {
         }
         """
 
-        @Test
-        func expansion() {
-            let closure = expr.expanded(nestingLevel: 2)
-            let interpolation: ExprSyntax = """
-            .init(
-                parameter: .init(
-                    closure: \(closure),
-                    value: "Foo"
-                )
+        let interpolation: ExprSyntax = """
+        .init(
+            parameter: .init(
+                closure: \(expr.expanded(nestingLevel: 2)),
+                value: "Foo"
             )
-            """
+        )
+        """
 
-            let expectation = """
-            .init(
-                parameter: .init(
-                    closure: { [weak self] arg0, arg1 -> String in
-                        if arg0 > 0 {
-                            return String(arg0)
-                        } else if arg1 {
-                            return "Test"
-                        }
-                        return ""
-                    },
-                    value: "Foo"
-                )
+        let expectation = """
+        .init(
+            parameter: .init(
+                closure: { [weak self] arg0, arg1 -> String in
+                    if arg0 > 0 {
+                        return String(arg0)
+                    } else if arg1 {
+                        return "Test"
+                    }
+                    return ""
+                },
+                value: "Foo"
             )
-            """
+        )
+        """
 
-            #expect(interpolation.description == expectation)
-        }
+        #expect(interpolation.description == expectation)
     }
 }

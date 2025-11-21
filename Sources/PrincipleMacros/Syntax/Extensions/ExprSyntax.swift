@@ -138,10 +138,6 @@ extension GenericSpecializationExprSyntax {
 
 extension MemberAccessExprSyntax {
 
-    public var referencesBaseType: Bool {
-        declName.baseName.tokenKind == .keyword(.self)
-    }
-
     public var inferredType: TypeSyntax? {
         guard let first = base?.inferredType else {
             return nil
@@ -150,6 +146,10 @@ extension MemberAccessExprSyntax {
             return "\(first).\(second)"
         }
         return first
+    }
+
+    public var referencesBaseType: Bool {
+        declName.baseName.tokenKind == .keyword(.self)
     }
 }
 

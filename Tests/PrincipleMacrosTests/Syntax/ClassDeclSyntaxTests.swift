@@ -11,92 +11,65 @@ import Testing
 
 // swiftlint:disable empty_line_after_type_declaration
 
-internal enum ClassDeclSyntaxTests {
+internal struct ClassDeclSyntaxTests {
 
-    struct NoInheritanceClause {
-
-        private func makeDecl() throws -> ClassDeclSyntax {
-            let decl: DeclSyntax = "class MyClass {}"
-            return try #require(decl.as(ClassDeclSyntax.self))
-        }
-
-        @Test
-        func inferredSuperclass() throws {
-            let result = try makeDecl().inferredSuperclass()
-            #expect(result == nil)
-        }
+    @Test
+    func withoutInheritenceClause() throws {
+        let decl: DeclSyntax = "class MyClass {}"
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        let result = classDecl.inferredSuperclass()
+        #expect(result == nil)
     }
 
-    struct InheritanceClause {
-
-        private func makeDecl() throws -> ClassDeclSyntax {
-            let decl: DeclSyntax = "class MyClass: Equatable, Hashable {}"
-            return try #require(decl.as(ClassDeclSyntax.self))
-        }
-
-        @Test
-        func inferredSuperclass() throws {
-            let result = try makeDecl().inferredSuperclass()
-            #expect(result == nil)
-        }
+    @Test
+    func withProtocolConformance() throws {
+        let decl: DeclSyntax = "class MyClass: Equatable, Hashable {}"
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        let result = classDecl.inferredSuperclass()
+        #expect(result == nil)
     }
 
-    struct OverrideModifier {
+    @Test
+    func withOverrideModifier() throws {
+        let decl: DeclSyntax = """
+        class MyClass: BaseClass<Int>, Hashable {
+            override func test() {}
+        }
+        """
 
-        private func makeDecl() throws -> ClassDeclSyntax {
-            let decl: DeclSyntax = """
-            class MyClass: BaseClass<Int>, Hashable {
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        let result = classDecl.inferredSuperclass()
+        #expect(result?.description == "BaseClass<Int>")
+    }
+
+    @Test
+    func withSuperExpression() throws {
+        let decl: DeclSyntax = """
+        class MyClass: BaseClass, Hashable {
+            init(value: Int) {
+                super.init()
+            }
+        }
+        """
+
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        let result = classDecl.inferredSuperclass()
+        #expect(result?.description == "BaseClass")
+    }
+
+    @Test
+    func withNestedClass() throws {
+        let decl: DeclSyntax = """
+        class MyClass: Equatable, Hashable {
+            class NestedClass: BaseClass {
                 override func test() {}
             }
-            """
-            return try #require(decl.as(ClassDeclSyntax.self))
         }
+        """
 
-        @Test
-        func inferredSuperclass() throws {
-            let result = try makeDecl().inferredSuperclass()
-            #expect(result?.description == "BaseClass<Int>")
-        }
-    }
-
-    struct SuperExpr {
-
-        private func makeDecl() throws -> ClassDeclSyntax {
-            let decl: DeclSyntax = """
-            class MyClass: BaseClass, Hashable {
-                init(value: Int) {
-                    super.init()
-                }
-            }
-            """
-            return try #require(decl.as(ClassDeclSyntax.self))
-        }
-
-        @Test
-        func inferredSuperclass() throws {
-            let result = try makeDecl().inferredSuperclass()
-            #expect(result?.description == "BaseClass")
-        }
-    }
-
-    struct NestedClassDecl {
-
-        private func makeDecl() throws -> ClassDeclSyntax {
-            let decl: DeclSyntax = """
-            class MyClass: Equatable, Hashable {
-                class NestedClass: BaseClass {
-                    override func test() {}
-                }
-            }
-            """
-            return try #require(decl.as(ClassDeclSyntax.self))
-        }
-
-        @Test
-        func inferredSuperclass() throws {
-            let result = try makeDecl().inferredSuperclass()
-            #expect(result == nil)
-        }
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        let result = classDecl.inferredSuperclass()
+        #expect(result == nil)
     }
 }
 

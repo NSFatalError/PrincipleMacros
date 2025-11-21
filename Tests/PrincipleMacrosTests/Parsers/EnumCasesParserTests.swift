@@ -15,7 +15,7 @@ internal struct EnumCasesParserTests {
     private let context = BasicMacroExpansionContext()
 
     @Test
-    func enumCase() throws {
+    func withoutAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase
         """
@@ -25,7 +25,7 @@ internal struct EnumCasesParserTests {
     }
 
     @Test
-    func enumCaseWithUnnamedAssociatedValue() throws {
+    func withUnnamedAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase(Int?)
         """
@@ -38,7 +38,7 @@ internal struct EnumCasesParserTests {
     }
 
     @Test
-    func enumCaseWithNamedAssociatedValue() throws {
+    func withNamedAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase(values: [String])
         """
@@ -51,7 +51,7 @@ internal struct EnumCasesParserTests {
     }
 
     @Test
-    func enumCaseWithManyAssociatedValues() throws {
+    func withMultipleAssociatedValues() throws {
         let decl: DeclSyntax = """
         case myCase(value: Int?, [String])
         """
