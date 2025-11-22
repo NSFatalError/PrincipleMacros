@@ -44,10 +44,10 @@ extension IfConfigClauseSyntax {
         }
 
         for (index, clause) in zip(parent.indices, parent) {
-            if clause == self {
-                parent[index] = aligned
+            parent[index] = if clause == self {
+                aligned
             } else {
-                parent[index] = clause.aligned
+                clause.aligned
                     .with(\.elements, .decls([]))
                     .withTrailingNewline
             }
