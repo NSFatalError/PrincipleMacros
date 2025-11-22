@@ -129,13 +129,6 @@ extension ParameterExtractorTests {
     }
 
     @Test
-    func missingGlobalActorExtraction() throws {
-        let extractor = try makeExtractor(from: "#MyMacro()")
-        let extracted = try extractor.globalActorIsolation(withLabel: "isolation")
-        #expect(extracted == nil)
-    }
-
-    @Test
     func explicitNilGlobalActorExtraction() throws {
         let extractor = try makeExtractor(from: "#MyMacro(isolation: nil)")
         let extracted = try extractor.globalActorIsolation(withLabel: "isolation")

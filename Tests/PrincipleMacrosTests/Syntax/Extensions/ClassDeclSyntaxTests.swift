@@ -15,16 +15,16 @@ internal struct ClassDeclSyntaxTests {
     func withoutInheritenceClause() throws {
         let decl: DeclSyntax = "class MyClass {}"
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let result = classDecl.inferredSuperclass()
-        #expect(result == nil)
+        let inferredSuperclass = classDecl.inferredSuperclass()
+        #expect(inferredSuperclass == nil)
     }
 
     @Test
     func withProtocolConformance() throws {
         let decl: DeclSyntax = "class MyClass: Equatable, Hashable {}"
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let result = classDecl.inferredSuperclass()
-        #expect(result == nil)
+        let inferredSuperclass = classDecl.inferredSuperclass()
+        #expect(inferredSuperclass == nil)
     }
 
     // swiftlint:disable empty_line_after_type_declaration
@@ -38,8 +38,8 @@ internal struct ClassDeclSyntaxTests {
         """
 
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let result = classDecl.inferredSuperclass()
-        #expect(result?.description == "BaseClass<Int>")
+        let inferredSuperclass = classDecl.inferredSuperclass()
+        #expect(inferredSuperclass?.description == "BaseClass<Int>")
     }
 
     @Test
@@ -53,8 +53,8 @@ internal struct ClassDeclSyntaxTests {
         """
 
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let result = classDecl.inferredSuperclass()
-        #expect(result?.description == "BaseClass")
+        let inferredSuperclass = classDecl.inferredSuperclass()
+        #expect(inferredSuperclass?.description == "BaseClass")
     }
 
     @Test
@@ -68,8 +68,8 @@ internal struct ClassDeclSyntaxTests {
         """
 
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let result = classDecl.inferredSuperclass()
-        #expect(result == nil)
+        let inferredSuperclass = classDecl.inferredSuperclass()
+        #expect(inferredSuperclass == nil)
     }
 
     // swiftlint:enable empty_line_after_type_declaration
