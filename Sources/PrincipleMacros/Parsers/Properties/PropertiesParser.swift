@@ -11,29 +11,26 @@ import SwiftSyntaxMacros
 public enum PropertiesParser: Parser {
 
     public static func parse(
-        declaration: some DeclSyntaxProtocol,
-        in context: some MacroExpansionContext
-    ) -> PropertiesList {
+        declaration: some DeclSyntaxProtocol
+    ) throws -> PropertiesList {
         guard let declaration = VariableDeclSyntax(declaration) else {
             return .init()
         }
 
-        return PropertiesList(
+        return try PropertiesList(
             declaration.bindings.compactMap { binding -> Property? in
                 guard let name = binding.name else {
-                    context.diagnose(
+                    throw DiagnosticsError(
                         node: declaration,
-                        errorMessage: "Property cannot be parsed"
+                        message: "Property cannot be parsed"
                     )
-                    return nil
                 }
 
                 guard let inferredType = binding.inferredType else {
-                    context.diagnose(
+                    throw DiagnosticsError(
                         node: declaration,
-                        errorMessage: "Type of property cannot be inferred - provide it explicitly"
+                        message: "Type of property cannot be inferred - provide it explicitly"
                     )
-                    return nil
                 }
 
                 return Property(

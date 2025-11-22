@@ -21,7 +21,7 @@ extension ClassDeclSyntax {
     private final class SuperclassFinder: SyntaxVisitor {
 
         private let classDecl: ClassDeclSyntax
-        private var didVerify = false
+        private var didFind = false
 
         init(for classDecl: ClassDeclSyntax) {
             self.classDecl = classDecl
@@ -36,7 +36,7 @@ extension ClassDeclSyntax {
             }
 
             walk(classDecl)
-            return didVerify ? firstInheritedType : nil
+            return didFind ? firstInheritedType : nil
         }
 
         override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
@@ -44,12 +44,12 @@ extension ClassDeclSyntax {
         }
 
         override func visit(_ node: DeclModifierSyntax) -> SyntaxVisitorContinueKind {
-            didVerify = didVerify || node.overrideSpecifier != nil
+            didFind = didFind || node.overrideSpecifier != nil
             return .visitChildren
         }
 
         override func visit(_: SuperExprSyntax) -> SyntaxVisitorContinueKind {
-            didVerify = true
+            didFind = true
             return .visitChildren
         }
     }

@@ -13,22 +13,20 @@ public protocol Parser {
     associatedtype ResultsCollection: ParserResultsCollection
 
     static func parse(
-        declaration: some DeclSyntaxProtocol,
-        in context: some MacroExpansionContext
-    ) -> ResultsCollection
+        declaration: some DeclSyntaxProtocol
+    ) throws -> ResultsCollection
 }
 
 extension Parser {
 
     public static func parse(
-        ifConfig: IfConfigDeclSyntax,
-        in context: some MacroExpansionContext
-    ) -> ResultsCollection {
-        ResultsCollection(
+        ifConfig: IfConfigDeclSyntax
+    ) throws -> ResultsCollection {
+        try ResultsCollection(
             ifConfig.clauses.flatMap { clause in
                 switch clause.elements {
                 case let .decls(members):
-                    parse(members: members, in: context)
+                    try parse(members: members)
                 default:
                     ResultsCollection()
                 }
@@ -37,24 +35,22 @@ extension Parser {
     }
 
     public static func parse(
-        members: MemberBlockItemListSyntax,
-        in context: some MacroExpansionContext
-    ) -> ResultsCollection {
-        ResultsCollection(
+        members: MemberBlockItemListSyntax
+    ) throws -> ResultsCollection {
+        try ResultsCollection(
             members.flatMap { member in
                 if let ifConfig = member.decl.as(IfConfigDeclSyntax.self) {
-                    parse(ifConfig: ifConfig, in: context)
+                    try parse(ifConfig: ifConfig)
                 } else {
-                    parse(declaration: member.decl, in: context)
+                    try parse(declaration: member.decl)
                 }
             }
         )
     }
 
     public static func parse(
-        memberBlock: MemberBlockSyntax,
-        in context: some MacroExpansionContext
-    ) -> ResultsCollection {
-        parse(members: memberBlock.members, in: context)
+        memberBlock: MemberBlockSyntax
+    ) throws -> ResultsCollection {
+        try parse(members: memberBlock.members)
     }
 }
