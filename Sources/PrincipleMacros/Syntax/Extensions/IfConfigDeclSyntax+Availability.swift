@@ -34,7 +34,7 @@ extension IfConfigDeclSyntax {
 
 extension IfConfigClauseSyntax {
 
-    var availability: Self? {
+    public var availability: Self? {
         if let availability = elements?.availability {
             with(\.elements, availability)
         } else {

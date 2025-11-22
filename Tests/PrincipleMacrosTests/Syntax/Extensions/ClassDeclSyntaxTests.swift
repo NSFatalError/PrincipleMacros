@@ -12,7 +12,7 @@ import Testing
 internal struct ClassDeclSyntaxTests {
 
     @Test
-    func withoutInheritenceClause() throws {
+    func withoutInheritanceClause() throws {
         let decl: DeclSyntax = "class MyClass {}"
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
         let inferredSuperclass = classDecl.inferredSuperclass()

@@ -143,3 +143,26 @@ extension ParameterExtractorTests {
         }
     }
 }
+
+extension ParameterExtractorTests {
+
+    @Test(
+        arguments: [
+            "MyType",
+            "SomeType.MyType"
+        ]
+    )
+    func typeExtraction(_ type: String) throws {
+        let extractor = try makeExtractor(from: "#MyMacro(type: \(raw: type).self)")
+        let extracted = try extractor.type(withLabel: "type")
+        #expect(extracted?.trimmedDescription == type)
+    }
+
+    @Test
+    func unexpectedSyntaxWhenPerformingTypeExtraction() throws {
+        let extractor = try makeExtractor(from: #"#MyMacro(type: MainActor.Type)"#)
+        #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
+            try extractor.type(withLabel: "type")
+        }
+    }
+}

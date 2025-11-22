@@ -165,13 +165,15 @@ extension ParameterExtractor {
             return .nonisolated(trimmedModifer: isolation)
         }
 
-        if let memberAccessExpression = MemberAccessExprSyntax(expression),
-           let explicitType = memberAccessExpression.base?.inferredType,
-           memberAccessExpression.referencesBaseType {
-            return .isolated(standardizedType: explicitType.standardized)
+        guard let memberAccessExpression = MemberAccessExprSyntax(expression),
+              let globalActorType = memberAccessExpression.baseTypeReference
+        else {
+            throw ParameterExtractionError.unexpectedSyntaxType
         }
 
-        throw ParameterExtractionError.unexpectedSyntaxType
+        return .isolated(
+            standardizedType: globalActorType.standardized
+        )
     }
 
     public func requiredGlobalActorIsolation(
@@ -181,5 +183,33 @@ extension ParameterExtractor {
             throw ParameterExtractionError.missingRequirement
         }
         return isolation
+    }
+}
+
+extension ParameterExtractor {
+
+    public func type(
+        withLabel label: TokenSyntax?
+    ) throws -> TypeSyntax? {
+        guard let expression = expression(withLabel: label) else {
+            return nil
+        }
+
+        guard let memberAccessExpression = MemberAccessExprSyntax(expression),
+              let type = memberAccessExpression.baseTypeReference
+        else {
+            throw ParameterExtractionError.unexpectedSyntaxType
+        }
+
+        return type
+    }
+
+    public func requiredType(
+        withLabel label: TokenSyntax?
+    ) throws -> TypeSyntax {
+        guard let type = try type(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return type
     }
 }
