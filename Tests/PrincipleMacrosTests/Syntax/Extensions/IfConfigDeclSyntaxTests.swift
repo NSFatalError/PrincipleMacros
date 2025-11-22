@@ -128,7 +128,7 @@ internal struct IfConfigDeclSyntaxTests {
     }
 
     @Test
-    func applyToNewMembers() throws{
+    func applyToNewMembers() throws {
         let decl: DeclSyntax = """
         class MyClass {
             #if DEBUG
