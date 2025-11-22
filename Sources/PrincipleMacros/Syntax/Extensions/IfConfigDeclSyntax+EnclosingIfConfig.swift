@@ -10,8 +10,12 @@ import SwiftSyntax
 
 extension IfConfigDeclSyntax {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
-        if let parent = parent?.as(MemberBlockItemSyntax.self) {
+    fileprivate var aligned: Self {
+        with(\.poundEndif, .poundEndifToken(leadingTrivia: .newline))
+    }
+
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
+        if let parent = aligned.parent?.as(MemberBlockItemSyntax.self) {
             return parent.enclosingIfConfig
         }
         return nil
@@ -20,9 +24,9 @@ extension IfConfigDeclSyntax {
 
 extension IfConfigClauseListSyntax {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
         if let parent = parent?.as(IfConfigDeclSyntax.self) {
-            return parent.enclosingIfConfig ?? parent
+            return parent.enclosingIfConfig ?? parent.aligned
         }
         return nil
     }
@@ -30,17 +34,32 @@ extension IfConfigClauseListSyntax {
 
 extension IfConfigClauseSyntax {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
-        if let parent = parent?.as(IfConfigClauseListSyntax.self) {
-            return parent.enclosingIfConfig
+    private var aligned: Self {
+        with(\.poundKeyword, poundKeyword.trimmed.withTrailingSpace)
+    }
+
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
+        guard var parent = parent?.as(IfConfigClauseListSyntax.self) else {
+            return nil
         }
-        return nil
+
+        for (index, clause) in zip(parent.indices, parent) {
+            if clause == self {
+                parent[index] = aligned
+            } else {
+                parent[index] = clause.aligned
+                    .with(\.elements, .decls([]))
+                    .withTrailingNewline
+            }
+        }
+
+        return parent.enclosingIfConfig
     }
 }
 
 extension MemberBlockItemListSyntax {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
         if let parent = parent?.as(IfConfigClauseSyntax.self) {
             return parent.enclosingIfConfig
         }
@@ -50,20 +69,41 @@ extension MemberBlockItemListSyntax {
 
 extension MemberBlockItemSyntax {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
-        if let parent = parent?.as(MemberBlockItemListSyntax.self) {
-            return parent.enclosingIfConfig
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
+        guard var parent = parent?.as(MemberBlockItemListSyntax.self) else {
+            return nil
         }
-        return nil
+
+        parent.replaceSubrange(
+            parent.startIndex ..< parent.endIndex,
+            with: CollectionOfOne(trimmed.withLeadingNewline)
+        )
+
+        return parent.enclosingIfConfig
     }
 }
 
 extension DeclSyntaxProtocol {
 
-    var enclosingIfConfig: IfConfigDeclSyntax? {
+    public var enclosingIfConfig: IfConfigDeclSyntax? {
         if let parent = parent?.as(MemberBlockItemSyntax.self) {
             return parent.enclosingIfConfig
         }
         return nil
+    }
+
+    public func applyingEnclosingIfConfig(
+        to members: MemberBlockItemListSyntax
+    ) -> IfConfigDeclSyntax? {
+        guard var parent = parent?.parent?.as(MemberBlockItemListSyntax.self) else {
+            return nil
+        }
+
+        parent.replaceSubrange(
+            parent.startIndex ..< parent.endIndex,
+            with: members
+        )
+
+        return parent.withLeadingNewline.enclosingIfConfig
     }
 }

@@ -10,14 +10,14 @@ import SwiftSyntaxMacros
 
 extension WithAttributesSyntax {
 
-    var availability: AttributeListSyntax? {
+    public var availability: AttributeListSyntax? {
         attributes.availability
     }
 }
 
 extension AttributeListSyntax {
 
-    var availability: Self? {
+    public var availability: Self? {
         let elements = compactMap(\.availability)
         return elements.isEmpty ? nil : AttributeListSyntax(elements)
     }
@@ -25,7 +25,7 @@ extension AttributeListSyntax {
 
 extension AttributeListSyntax.Element {
 
-    var availability: Self? {
+    public var availability: Self? {
         switch self {
         case let .attribute(attribute):
             if let availability = attribute.availability {
