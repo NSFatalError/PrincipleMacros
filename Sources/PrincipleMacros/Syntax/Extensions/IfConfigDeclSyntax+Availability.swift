@@ -11,13 +11,24 @@ import SwiftSyntaxMacros
 extension IfConfigDeclSyntax {
 
     public var availability: Self? {
-        guard clauses.contains(where: { $0.availability != nil }) else {
+        var elements = [IfConfigClauseSyntax]()
+        var isEmpty = true
+
+        for clause in clauses {
+            if let availability = clause.availability {
+                elements.append(availability)
+                isEmpty = false
+            } else {
+                elements.append(clause.with(\.elements, .attributes([])))
+            }
+        }
+
+        guard !isEmpty else {
             return nil
         }
-        let elements = clauses.compactMap { clause in
-            clause.availability ?? clause.with(\.elements, .attributes([]))
-        }
-        return with(\.clauses, IfConfigClauseListSyntax(elements))
+
+        let clauses = IfConfigClauseListSyntax(elements)
+        return with(\.clauses, clauses)
     }
 }
 
