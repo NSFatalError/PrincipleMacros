@@ -45,7 +45,7 @@ extension IfConfigClauseSyntax {
 
         for (index, clause) in zip(parent.indices, parent) {
             parent[index] = if clause == self {
-                aligned
+                clause.aligned
             } else {
                 clause.aligned
                     .with(\.elements, .decls([]))
