@@ -20,9 +20,9 @@ extension ClassDeclSyntax {
     }
 
     public func inferredSuperclass(
-        expectation: Bool?
+        isExpected: Bool?
     ) throws -> TypeSyntax? {
-        switch expectation {
+        switch isExpected {
         case true:
             if let superclass = unverifiedInferredSuperclass {
                 return superclass
