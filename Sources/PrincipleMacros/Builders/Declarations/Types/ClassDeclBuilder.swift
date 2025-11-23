@@ -19,6 +19,9 @@ extension ClassDeclBuilder {
     public var typeDeclaration: any TypeDeclSyntax {
         declaration
     }
+}
+
+extension ClassDeclBuilder {
 
     public var inferredSuperclass: TypeSyntax? {
         nil
@@ -28,5 +31,9 @@ extension ClassDeclBuilder {
         inferredSuperclass != nil
             ? TokenSyntax(.keyword(.override), presence: .present).withTrailingSpace
             : nil
+    }
+
+    public var inheritedFinalModifier: TokenSyntax? {
+        declaration.finalSpecifier?.trimmed.withTrailingSpace
     }
 }
