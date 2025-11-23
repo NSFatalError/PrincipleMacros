@@ -26,11 +26,20 @@ extension ParserResultsCollection {
         all.endIndex
     }
 
+    public subscript(position: Int) -> Element {
+        all[position]
+    }
+}
+
+extension ParserResultsCollection {
+
     public init() {
         self.init([])
     }
 
-    public subscript(position: Int) -> Element {
-        all[position]
+    public func filter(
+        _ isIncluded: (Element) throws -> Bool
+    ) rethrows -> Self {
+        try Self(filter(isIncluded))
     }
 }
