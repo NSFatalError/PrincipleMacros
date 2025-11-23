@@ -125,7 +125,7 @@ extension ParameterExtractor {
 
     public func rawBool(
         withLabel label: TokenSyntax?
-    ) throws -> Bool? {
+    ) throws -> Bool? { // swiftlint:disable:this discouraged_optional_boolean
         guard let expression = expression(withLabel: label) else {
             return nil
         }
@@ -139,7 +139,7 @@ extension ParameterExtractor {
 
     public func requiredRawBool(
         withLabel label: TokenSyntax?
-    ) throws -> Bool? {
+    ) throws -> Bool {
         guard let bool = try rawBool(withLabel: label) else {
             throw ParameterExtractionError.missingRequirement
         }

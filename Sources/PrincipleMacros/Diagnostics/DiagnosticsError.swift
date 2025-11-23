@@ -12,10 +12,11 @@ extension DiagnosticsError {
 
     public init(
         node: some SyntaxProtocol,
-        message: String
+        message: String,
+        fixIts: [FixIt] = []
     ) {
         let message = MacroExpansionErrorMessage(message)
-        let diagnostic = Diagnostic(node: node, message: message)
+        let diagnostic = Diagnostic(node: node, message: message, fixIts: fixIts)
         self.init(diagnostics: [diagnostic])
     }
 }
