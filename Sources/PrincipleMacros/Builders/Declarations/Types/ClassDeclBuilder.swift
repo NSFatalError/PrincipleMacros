@@ -11,11 +11,22 @@ import SwiftSyntaxMacros
 public protocol ClassDeclBuilder: TypeDeclBuilder {
 
     var declaration: ClassDeclSyntax { get }
+    var inferredSuperclass: TypeSyntax? { get }
 }
 
 extension ClassDeclBuilder {
 
     public var typeDeclaration: any TypeDeclSyntax {
         declaration
+    }
+
+    public var inferredSuperclass: TypeSyntax? {
+        nil
+    }
+
+    public var inheritedOverrideModifier: TokenSyntax? {
+        inferredSuperclass != nil
+            ? TokenSyntax(.keyword(.override), presence: .present).withTrailingSpace
+            : nil
     }
 }
