@@ -13,8 +13,15 @@ extension PeerBuilding where Self: DeclBuilder {
     public var inheritedAccessControlLevel: AccessControlLevel? {
         .forPeer(
             of: basicDeclaration,
+            preferred: preferredAccessControlLevel
+        )
+    }
+
+    public var inheritedAccessControlLevelAllowingOpen: AccessControlLevel? {
+        .forPeer(
+            of: basicDeclaration,
             preferred: preferredAccessControlLevel,
-            maxAllowed: maxAllowedAccessControlLevel
+            maxAllowed: .open
         )
     }
 }

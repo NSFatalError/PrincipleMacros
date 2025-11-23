@@ -15,7 +15,6 @@ public protocol DeclBuilder {
 
     var preferredGlobalActorIsolation: GlobalActorIsolation? { get }
     var preferredAccessControlLevel: AccessControlLevel? { get }
-    var maxAllowedAccessControlLevel: AccessControlLevel { get }
 
     func build() throws -> [DeclSyntax]
 }
@@ -32,9 +31,5 @@ extension DeclBuilder {
 
     public var preferredAccessControlLevel: AccessControlLevel? {
         nil
-    }
-
-    public var maxAllowedAccessControlLevel: AccessControlLevel {
-        .public
     }
 }
