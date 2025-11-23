@@ -77,6 +77,28 @@ extension AccessControlLevel: Comparable {
 
 extension AccessControlLevel {
 
+    public var inheritedByMember: AccessControlLevel? {
+        switch self {
+        case .private:
+            nil
+        default:
+            self
+        }
+    }
+
+    public var inheritedBySibling: AccessControlLevel {
+        switch self {
+        case .private:
+            .fileprivate
+        default:
+            self
+        }
+    }
+
+    public var inheritedByPeer: AccessControlLevel {
+        self
+    }
+
     public static func forMember(
         of declaration: some TypeDeclSyntax,
         preferred: Self? = nil,
@@ -86,7 +108,7 @@ extension AccessControlLevel {
             from: declaration.accessControlLevel,
             preferred: preferred,
             maxAllowed: maxAllowed,
-            transform: { $0 == .private ? nil : $0 }
+            transform: \.inheritedByMember
         )
     }
 
@@ -99,7 +121,7 @@ extension AccessControlLevel {
             from: syntax.accessControlLevel,
             preferred: preferred,
             maxAllowed: maxAllowed,
-            transform: { $0 == .private ? .fileprivate : $0 }
+            transform: \.inheritedBySibling
         )
     }
 
@@ -111,7 +133,8 @@ extension AccessControlLevel {
         _resolved(
             from: syntax.accessControlLevel,
             preferred: preferred,
-            maxAllowed: maxAllowed
+            maxAllowed: maxAllowed,
+            transform: \.inheritedByPeer
         )
     }
 
@@ -119,7 +142,7 @@ extension AccessControlLevel {
         from attached: Self?,
         preferred: Self?,
         maxAllowed: Self,
-        transform: (Self) -> Self? = \.self
+        transform: (Self) -> Self?
     ) -> Self? {
         if let preferred {
             return min(preferred, maxAllowed)
