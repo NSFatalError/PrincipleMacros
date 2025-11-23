@@ -18,6 +18,25 @@ extension ClassDeclSyntax {
         let visitor = SubclassKeywordsVisitor(for: self)
         return visitor.verifiedSuperclass()
     }
+
+    public func inferredSuperclass(
+        expectation: Bool?
+    ) throws -> TypeSyntax? {
+        switch expectation {
+        case true:
+            if let superclass = unverifiedInferredSuperclass {
+                return superclass
+            }
+            throw DiagnosticsError(
+                node: self,
+                message: "\(name.trimmed) should have a superclass"
+            )
+        case false:
+            return nil
+        case nil:
+            return inferredSuperclass()
+        }
+    }
 }
 
 extension ClassDeclSyntax {
