@@ -11,7 +11,7 @@ import SwiftSyntaxMacros
 public protocol ClassDeclBuilder: TypeDeclBuilder {
 
     var declaration: ClassDeclSyntax { get }
-    var inferredSuperclass: TypeSyntax? { get }
+    var trimmedSuperclassType: TypeSyntax? { get }
 }
 
 extension ClassDeclBuilder {
@@ -23,12 +23,12 @@ extension ClassDeclBuilder {
 
 extension ClassDeclBuilder {
 
-    public var inferredSuperclass: TypeSyntax? {
+    public var trimmedSuperclassType: TypeSyntax? {
         nil
     }
 
     public var inheritedOverrideModifier: TokenSyntax? {
-        inferredSuperclass != nil
+        trimmedSuperclassType != nil
             ? TokenSyntax(.keyword(.override), presence: .present).withTrailingSpace
             : nil
     }
