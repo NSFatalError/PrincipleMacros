@@ -33,4 +33,9 @@ extension SyntaxProtocol {
     public func withLeadingNewlines(_ count: Int = 2) -> Self {
         with(\.leadingTrivia, .newlines(count))
     }
+
+    public func withTrivia(from other: some SyntaxProtocol) -> Self {
+        with(\.leadingTrivia, other.leadingTrivia)
+            .with(\.trailingTrivia, other.trailingTrivia)
+    }
 }
