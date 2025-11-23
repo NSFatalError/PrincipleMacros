@@ -10,35 +10,35 @@ import SwiftSyntaxMacros
 
 extension ClassDeclSyntax {
 
-    public var firstInheritedType: TypeSyntax? {
-        inheritanceClause?.inheritedTypes.first?.type
+    public var unverifiedInferredSuperclass: TypeSyntax? {
+        inheritanceClause?.inheritedTypes.first?.type.trimmed
     }
 
     public func inferredSuperclass() -> TypeSyntax? {
-        let superclassFinder = SuperclassFinder(for: self)
-        return superclassFinder.find()?.trimmed
+        let visitor = SubclassKeywordsVisitor(for: self)
+        return visitor.verifiedSuperclass()
     }
 }
 
 extension ClassDeclSyntax {
 
-    private final class SuperclassFinder: SyntaxVisitor {
+    private final class SubclassKeywordsVisitor: SyntaxVisitor {
 
         private let classDecl: ClassDeclSyntax
-        private var didFind = false
+        private var didVerify = false
 
         init(for classDecl: ClassDeclSyntax) {
             self.classDecl = classDecl
             super.init(viewMode: .sourceAccurate)
         }
 
-        func find() -> TypeSyntax? {
-            guard let firstInheritedType = classDecl.firstInheritedType else {
+        func verifiedSuperclass() -> TypeSyntax? {
+            guard let unverified = classDecl.unverifiedInferredSuperclass else {
                 return nil
             }
 
             walk(classDecl)
-            return didFind ? firstInheritedType : nil
+            return didVerify ? unverified : nil
         }
 
         override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
@@ -46,12 +46,12 @@ extension ClassDeclSyntax {
         }
 
         override func visit(_ node: DeclModifierSyntax) -> SyntaxVisitorContinueKind {
-            didFind = didFind || node.overrideSpecifier != nil
+            didVerify = didVerify || node.overrideSpecifier != nil
             return .visitChildren
         }
 
         override func visit(_: SuperExprSyntax) -> SyntaxVisitorContinueKind {
-            didFind = true
+            didVerify = true
             return .visitChildren
         }
     }
