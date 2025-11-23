@@ -98,6 +98,29 @@ extension ParameterExtractorTests {
 
 extension ParameterExtractorTests {
 
+    @Test(
+        arguments: [
+            true,
+            false
+        ]
+    )
+    func rawBoolExtraction(_ bool: Bool) throws {
+        let extractor = try makeExtractor(from: "#MyMacro(boolean: \(raw: bool))")
+        let extracted = try extractor.rawBool(withLabel: "boolean")
+        #expect(extracted == bool)
+    }
+
+    @Test
+    func unexpectedSyntaxWhenPerformingRawBoolExtraction() throws {
+        let extractor = try makeExtractor(from: #"#MyMacro(boolean: value)"#)
+        #expect(throws: ParameterExtractionError.unexpectedSyntaxType) {
+            try extractor.rawBool(withLabel: "boolean")
+        }
+    }
+}
+
+extension ParameterExtractorTests {
+
     @Test
     func rawStringExtraction() throws {
         let extractor = try makeExtractor(from: #"#MyMacro(string: "arg")"#)

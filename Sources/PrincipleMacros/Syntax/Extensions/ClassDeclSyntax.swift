@@ -10,6 +10,10 @@ import SwiftSyntaxMacros
 
 extension ClassDeclSyntax {
 
+    public var firstInheritedType: TypeSyntax? {
+        inheritanceClause?.inheritedTypes.first?.type
+    }
+
     public func inferredSuperclass() -> TypeSyntax? {
         let superclassFinder = SuperclassFinder(for: self)
         return superclassFinder.find()?.trimmed
@@ -29,9 +33,7 @@ extension ClassDeclSyntax {
         }
 
         func find() -> TypeSyntax? {
-            guard let inheritanceClause = classDecl.inheritanceClause,
-                  let firstInheritedType = inheritanceClause.inheritedTypes.first?.type
-            else {
+            guard let firstInheritedType = classDecl.firstInheritedType else {
                 return nil
             }
 

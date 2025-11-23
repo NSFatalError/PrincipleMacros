@@ -123,6 +123,32 @@ extension ParameterExtractor {
 
 extension ParameterExtractor {
 
+    public func rawBool(
+        withLabel label: TokenSyntax?
+    ) throws -> Bool? {
+        guard let expression = expression(withLabel: label) else {
+            return nil
+        }
+
+        guard let bool = expression.as(BooleanLiteralExprSyntax.self) else {
+            throw ParameterExtractionError.unexpectedSyntaxType
+        }
+
+        return bool.literal.tokenKind == .keyword(.true)
+    }
+
+    public func requiredRawBool(
+        withLabel label: TokenSyntax?
+    ) throws -> Bool? {
+        guard let bool = try rawBool(withLabel: label) else {
+            throw ParameterExtractionError.missingRequirement
+        }
+        return bool
+    }
+}
+
+extension ParameterExtractor {
+
     public func rawString(
         withLabel label: TokenSyntax?
     ) throws -> String? {
