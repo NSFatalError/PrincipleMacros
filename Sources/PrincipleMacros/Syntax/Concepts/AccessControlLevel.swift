@@ -77,26 +77,32 @@ extension AccessControlLevel: Comparable {
 
 extension AccessControlLevel {
 
-    public var inheritedByMember: AccessControlLevel? {
+    public func inheritedByMember(
+        maxAllowed: Self = .public
+    ) -> Self? {
         switch self {
         case .private:
             nil
         default:
-            self
+            min(self, maxAllowed)
         }
     }
 
-    public var inheritedBySibling: AccessControlLevel {
+    public func inheritedBySibling(
+        maxAllowed: Self = .public
+    ) -> Self {
         switch self {
         case .private:
-            .fileprivate
+            min(.fileprivate, maxAllowed)
         default:
-            self
+            min(self, maxAllowed)
         }
     }
 
-    public var inheritedByPeer: AccessControlLevel {
-        self
+    public func inheritedByPeer(
+        maxAllowed: Self = .public
+    ) -> Self {
+        min(self, maxAllowed)
     }
 
     public static func forMember(
@@ -108,7 +114,7 @@ extension AccessControlLevel {
             from: declaration.accessControlLevel,
             preferred: preferred,
             maxAllowed: maxAllowed,
-            transform: \.inheritedByMember
+            transform: { $0.inheritedByMember(maxAllowed: maxAllowed) }
         )
     }
 
@@ -121,7 +127,7 @@ extension AccessControlLevel {
             from: syntax.accessControlLevel,
             preferred: preferred,
             maxAllowed: maxAllowed,
-            transform: \.inheritedBySibling
+            transform: { $0.inheritedBySibling(maxAllowed: maxAllowed) }
         )
     }
 
@@ -134,7 +140,7 @@ extension AccessControlLevel {
             from: syntax.accessControlLevel,
             preferred: preferred,
             maxAllowed: maxAllowed,
-            transform: \.inheritedByPeer
+            transform: { $0.inheritedByPeer(maxAllowed: maxAllowed) }
         )
     }
 
@@ -147,8 +153,7 @@ extension AccessControlLevel {
         if let preferred {
             return min(preferred, maxAllowed)
         }
-        if var attached {
-            attached = min(attached, maxAllowed)
+        if let attached {
             return transform(attached)
         }
         return nil
