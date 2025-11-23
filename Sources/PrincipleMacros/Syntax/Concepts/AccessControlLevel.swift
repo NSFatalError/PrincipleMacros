@@ -104,6 +104,9 @@ extension AccessControlLevel {
     ) -> Self {
         min(self, maxAllowed)
     }
+}
+
+extension AccessControlLevel {
 
     public static func forMember(
         of declaration: some TypeDeclSyntax,
