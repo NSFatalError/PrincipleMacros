@@ -125,7 +125,7 @@ extension ParameterExtractor {
 
     public func rawBool(
         withLabel label: TokenSyntax?
-    ) throws -> Bool? { // swiftlint:disable:this discouraged_optional_boolean
+    ) throws -> Bool? {
         guard let expression = expression(withLabel: label) else {
             return nil
         }
