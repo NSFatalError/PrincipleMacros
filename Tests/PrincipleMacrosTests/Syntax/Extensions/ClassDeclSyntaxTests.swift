@@ -34,10 +34,10 @@ internal enum ClassDeclSyntaxTests {
         @Test
         func withOverrideModifier() throws {
             let decl: DeclSyntax = """
-        class MyClass: BaseClass<Int>, Hashable {
-            override func test() {}
-        }
-        """
+            class MyClass: BaseClass<Int>, Hashable {
+                override func test() {}
+            }
+            """
 
             let classDecl = try #require(decl.as(ClassDeclSyntax.self))
             let inferredSuperclass = classDecl.inferredSuperclassType()
@@ -47,12 +47,12 @@ internal enum ClassDeclSyntaxTests {
         @Test
         func withSuperExpression() throws {
             let decl: DeclSyntax = """
-        class MyClass: BaseClass, Hashable {
-            init(value: Int) {
-                super.init()
+            class MyClass: BaseClass, Hashable {
+                init(value: Int) {
+                    super.init()
+                }
             }
-        }
-        """
+            """
 
             let classDecl = try #require(decl.as(ClassDeclSyntax.self))
             let inferredSuperclass = classDecl.inferredSuperclassType()
@@ -62,12 +62,12 @@ internal enum ClassDeclSyntaxTests {
         @Test
         func withNestedClass() throws {
             let decl: DeclSyntax = """
-        class MyClass: Equatable, Hashable {
-            class NestedClass: BaseClass {
-                override func test() {}
+            class MyClass: Equatable, Hashable {
+                class NestedClass: BaseClass {
+                    override func test() {}
+                }
             }
-        }
-        """
+            """
 
             let classDecl = try #require(decl.as(ClassDeclSyntax.self))
             let inferredSuperclass = classDecl.inferredSuperclassType()
