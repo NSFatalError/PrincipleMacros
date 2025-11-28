@@ -10,22 +10,24 @@ import SwiftSyntaxMacros
 
 extension ClassDeclSyntax {
 
-    public var unverifiedInferredSuperclass: TypeSyntax? {
+    public var unverifiedInferredSuperclassType: TypeSyntax? {
         inheritanceClause?.inheritedTypes.first?.type.trimmed
     }
 
-    public func inferredSuperclass() -> TypeSyntax? {
-        let visitor = SubclassKeywordsVisitor(for: self)
-        return visitor.verifiedSuperclass()
+    public func inferredSuperclassType() -> TypeSyntax? {
+        let verifier = SuperclassVerifier(for: self)
+        return verifier.verifiedSuperclassType()
     }
 
-    public func inferredSuperclass(
+    public func inferredSuperclassType(
         isExpected: Bool?
     ) throws -> TypeSyntax? {
         switch isExpected {
+        case nil:
+            return inferredSuperclassType()
         case true:
-            if let superclass = unverifiedInferredSuperclass {
-                return superclass
+            if let type = unverifiedInferredSuperclassType {
+                return type
             }
             throw DiagnosticsError(
                 node: self,
@@ -33,15 +35,13 @@ extension ClassDeclSyntax {
             )
         case false:
             return nil
-        case nil:
-            return inferredSuperclass()
         }
     }
 }
 
 extension ClassDeclSyntax {
 
-    private final class SubclassKeywordsVisitor: SyntaxVisitor {
+    private final class SuperclassVerifier: SyntaxVisitor {
 
         private let classDecl: ClassDeclSyntax
         private var didVerify = false
@@ -51,13 +51,13 @@ extension ClassDeclSyntax {
             super.init(viewMode: .sourceAccurate)
         }
 
-        func verifiedSuperclass() -> TypeSyntax? {
-            guard let unverified = classDecl.unverifiedInferredSuperclass else {
+        func verifiedSuperclassType() -> TypeSyntax? {
+            if let unverified = classDecl.unverifiedInferredSuperclassType {
+                walk(classDecl)
+                return didVerify ? unverified : nil
+            } else {
                 return nil
             }
-
-            walk(classDecl)
-            return didVerify ? unverified : nil
         }
 
         override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
