@@ -9,42 +9,44 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct ClassDeclSyntaxTests {
+internal enum ClassDeclSyntaxTests {
 
-    @Test
-    func withoutInheritanceClause() throws {
-        let decl: DeclSyntax = "class MyClass {}"
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let inferredSuperclass = classDecl.inferredSuperclass()
-        #expect(inferredSuperclass == nil)
-    }
+    struct InferredSuperclassType {
 
-    @Test
-    func withProtocolConformance() throws {
-        let decl: DeclSyntax = "class MyClass: Equatable, Hashable {}"
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let inferredSuperclass = classDecl.inferredSuperclass()
-        #expect(inferredSuperclass == nil)
-    }
+        @Test
+        func withoutInheritanceClause() throws {
+            let decl: DeclSyntax = "class MyClass {}"
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let inferredSuperclass = classDecl.inferredSuperclassType()
+            #expect(inferredSuperclass == nil)
+        }
 
-    // swiftlint:disable empty_line_after_type_declaration
+        @Test
+        func withProtocolConformance() throws {
+            let decl: DeclSyntax = "class MyClass: Equatable, Hashable {}"
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let inferredSuperclass = classDecl.inferredSuperclassType()
+            #expect(inferredSuperclass == nil)
+        }
 
-    @Test
-    func withOverrideModifier() throws {
-        let decl: DeclSyntax = """
+        // swiftlint:disable empty_line_after_type_declaration
+
+        @Test
+        func withOverrideModifier() throws {
+            let decl: DeclSyntax = """
         class MyClass: BaseClass<Int>, Hashable {
             override func test() {}
         }
         """
 
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let inferredSuperclass = classDecl.inferredSuperclass()
-        #expect(inferredSuperclass?.description == "BaseClass<Int>")
-    }
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let inferredSuperclass = classDecl.inferredSuperclassType()
+            #expect(inferredSuperclass?.description == "BaseClass<Int>")
+        }
 
-    @Test
-    func withSuperExpression() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withSuperExpression() throws {
+            let decl: DeclSyntax = """
         class MyClass: BaseClass, Hashable {
             init(value: Int) {
                 super.init()
@@ -52,14 +54,14 @@ internal struct ClassDeclSyntaxTests {
         }
         """
 
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let inferredSuperclass = classDecl.inferredSuperclass()
-        #expect(inferredSuperclass?.description == "BaseClass")
-    }
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let inferredSuperclass = classDecl.inferredSuperclassType()
+            #expect(inferredSuperclass?.description == "BaseClass")
+        }
 
-    @Test
-    func withNestedClass() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withNestedClass() throws {
+            let decl: DeclSyntax = """
         class MyClass: Equatable, Hashable {
             class NestedClass: BaseClass {
                 override func test() {}
@@ -67,10 +69,11 @@ internal struct ClassDeclSyntaxTests {
         }
         """
 
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let inferredSuperclass = classDecl.inferredSuperclass()
-        #expect(inferredSuperclass == nil)
-    }
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let inferredSuperclass = classDecl.inferredSuperclassType()
+            #expect(inferredSuperclass == nil)
+        }
 
-    // swiftlint:enable empty_line_after_type_declaration
+        // swiftlint:enable empty_line_after_type_declaration
+    }
 }

@@ -9,31 +9,33 @@
 @testable import PrincipleMacros
 import Testing
 
-internal struct IfConfigDeclSyntaxTests {
+internal enum IfConfigDeclSyntaxTests {
 
-    private func parseLastProperty(in decl: DeclSyntax) throws -> Property {
-        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        let properties = try PropertiesParser.parse(memberBlock: classDecl.memberBlock)
-        return try #require(properties.last)
-    }
+    struct EnclosingIfConfig {
+        
+        private func parseLastProperty(in decl: DeclSyntax) throws -> Property {
+            let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+            let properties = try PropertiesParser.parse(memberBlock: classDecl.memberBlock)
+            return try #require(properties.last)
+        }
 
-    // swiftlint:disable empty_line_after_type_declaration
+        // swiftlint:disable empty_line_after_type_declaration
 
-    @Test
-    func withoutIfConfig() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withoutIfConfig() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             var test = 123
         }
         """
 
-        let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
-        #expect(ifConfig == nil)
-    }
+            let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
+            #expect(ifConfig == nil)
+        }
 
-    @Test
-    func withIfConfig() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withIfConfig() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             #if os(macOS)
             var other = "hello"
@@ -42,19 +44,19 @@ internal struct IfConfigDeclSyntaxTests {
         }
         """
 
-        let expectation = """
+            let expectation = """
         #if os(macOS)
         var test = 123
         #endif
         """
 
-        let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
-        #expect(ifConfig?.description == expectation)
-    }
+            let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
+            #expect(ifConfig?.description == expectation)
+        }
 
-    @Test
-    func withElseIfConfig() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withElseIfConfig() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             #if os(iOS)
             var other = "hello"
@@ -64,20 +66,20 @@ internal struct IfConfigDeclSyntaxTests {
         }
         """
 
-        let expectation = """
+            let expectation = """
         #if os(iOS)
         #elseif os(macOS)
         var test = 123
         #endif
         """
 
-        let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
-        #expect(ifConfig?.description == expectation)
-    }
+            let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
+            #expect(ifConfig?.description == expectation)
+        }
 
-    @Test
-    func withNestedIfConfig() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withNestedIfConfig() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             #if DEBUG
             var other = "hello"
@@ -88,7 +90,7 @@ internal struct IfConfigDeclSyntaxTests {
         }
         """
 
-        let expectation = """
+            let expectation = """
         #if DEBUG
         #if os(macOS)
         var test = 123
@@ -96,13 +98,13 @@ internal struct IfConfigDeclSyntaxTests {
         #endif
         """
 
-        let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
-        #expect(ifConfig?.description == expectation)
-    }
+            let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
+            #expect(ifConfig?.description == expectation)
+        }
 
-    @Test
-    func withNestedElseConfig() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func withNestedElseConfig() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             #if DEBUG
             var other = "hello"
@@ -114,7 +116,7 @@ internal struct IfConfigDeclSyntaxTests {
         }
         """
 
-        let expectation = """
+            let expectation = """
         #if DEBUG
         #else 
         #if os(macOS)
@@ -123,13 +125,13 @@ internal struct IfConfigDeclSyntaxTests {
         #endif
         """
 
-        let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
-        #expect(ifConfig?.description == expectation)
-    }
+            let ifConfig = try parseLastProperty(in: decl).enclosingIfConfig
+            #expect(ifConfig?.description == expectation)
+        }
 
-    @Test
-    func applyToNewMembers() throws {
-        let decl: DeclSyntax = """
+        @Test
+        func applyToNewMembers() throws {
+            let decl: DeclSyntax = """
         class MyClass {
             #if DEBUG
             var other = "hello"
@@ -141,12 +143,12 @@ internal struct IfConfigDeclSyntaxTests {
         }
         """
 
-        let newMembers: MemberBlockItemListSyntax = """
+            let newMembers: MemberBlockItemListSyntax = """
         var replacement = "Hello"
         func test() {}
         """
 
-        let expectation = """
+            let expectation = """
         #if DEBUG
         #else 
         #if os(macOS)
@@ -156,10 +158,11 @@ internal struct IfConfigDeclSyntaxTests {
         #endif
         """
 
-        let property = try parseLastProperty(in: decl)
-        let ifConfig = property.underlying.applyingEnclosingIfConfig(to: newMembers)
-        #expect(ifConfig?.description == expectation)
-    }
+            let property = try parseLastProperty(in: decl)
+            let ifConfig = property.underlying.applyingEnclosingIfConfig(to: newMembers)
+            #expect(ifConfig?.description == expectation)
+        }
 
-    // swiftlint:enable empty_line_after_type_declaration
+        // swiftlint:enable empty_line_after_type_declaration
+    }
 }
