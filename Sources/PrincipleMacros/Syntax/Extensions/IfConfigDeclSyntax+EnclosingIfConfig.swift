@@ -95,15 +95,22 @@ extension DeclSyntaxProtocol {
     public func applyingEnclosingIfConfig(
         to members: MemberBlockItemListSyntax
     ) -> IfConfigDeclSyntax? {
-        guard var parent = parent?.parent?.as(MemberBlockItemListSyntax.self) else {
+        guard var ancestor = parent?.parent?.parent?.as(IfConfigClauseSyntax.self) else {
             return nil
         }
 
-        parent.replaceSubrange(
-            parent.startIndex ..< parent.endIndex,
-            with: members
-        )
+        ancestor = ancestor.with(\.elements, .decls(members.withLeadingNewline))
+        return ancestor.enclosingIfConfig
+    }
 
-        return parent.withLeadingNewline.enclosingIfConfig
+    public func applyingEnclosingIfConfig(
+        to statements: CodeBlockItemListSyntax
+    ) -> IfConfigDeclSyntax? {
+        guard var ancestor = parent?.parent?.parent?.as(IfConfigClauseSyntax.self) else {
+            return nil
+        }
+
+        ancestor = ancestor.with(\.elements, .statements(statements.withLeadingNewline))
+        return ancestor.enclosingIfConfig
     }
 }

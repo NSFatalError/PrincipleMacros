@@ -163,6 +163,40 @@ internal enum IfConfigDeclSyntaxTests {
             #expect(ifConfig?.description == expectation)
         }
 
+        @Test
+        func applyToNewStatements() throws {
+            let decl: DeclSyntax = """
+            class MyClass {
+                #if DEBUG
+                var other = "hello"
+                #else
+                    #if os(macOS)
+                    var test = 123
+                    #endif
+                #endif
+            }
+            """
+
+            let newStatements: CodeBlockItemListSyntax = """
+            var replacement = "Hello"
+            func test() {}
+            """
+
+            let expectation = """
+            #if DEBUG
+            #else 
+            #if os(macOS)
+            var replacement = "Hello"
+            func test() {}
+            #endif
+            #endif
+            """
+
+            let property = try parseLastProperty(in: decl)
+            let ifConfig = property.underlying.applyingEnclosingIfConfig(to: newStatements)
+            #expect(ifConfig?.description == expectation)
+        }
+
         // swiftlint:enable empty_line_after_type_declaration
     }
 }
