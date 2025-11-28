@@ -39,6 +39,7 @@ internal struct AvailabilityTests {
         let decl: DeclSyntax = """
         #if os(macOS)
         @MainActor 
+        @available(macOS 26, *)
         #else
         @Observable
         @available(iOS 26, *)
@@ -48,6 +49,7 @@ internal struct AvailabilityTests {
 
         let expectation = """
         #if os(macOS)
+        @available(macOS 26, *)
         #else
         @available(iOS 26, *)
         #endif

@@ -32,4 +32,8 @@ extension DeclBuilder {
     public var preferredAccessControlLevel: AccessControlLevel? {
         nil
     }
+
+    public var inheritedAvailability: AttributeListSyntax? {
+        basicDeclaration.availability?.trimmed.withTrailingNewline
+    }
 }
