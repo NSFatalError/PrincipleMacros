@@ -10,18 +10,19 @@ import SwiftSyntaxMacros
 
 extension ClassDeclSyntax {
 
-    public func inferredSuperclassType(
-        isKnownToBeSubclass: Bool = false
-    ) -> TypeSyntax? {
-        let finder = SuperclassFinder(for: self)
-        let needsCheck = !isKnownToBeSubclass
-        return finder.find(checkAgainstSubclassSpecificKeywords: needsCheck)
+    public var possibleSuperclassType: TypeSyntax? {
+        inheritanceClause?.inheritedTypes.first?.type.trimmed
+    }
+
+    public func inferredSuperclassType() -> TypeSyntax? {
+        let inferrer = SuperclassTypeInferrer(for: self)
+        return inferrer.infer()
     }
 }
 
 extension ClassDeclSyntax {
 
-    private final class SuperclassFinder: SyntaxVisitor {
+    private final class SuperclassTypeInferrer: SyntaxVisitor {
 
         private let classDecl: ClassDeclSyntax
         private var didFind = false
@@ -31,18 +32,12 @@ extension ClassDeclSyntax {
             super.init(viewMode: .sourceAccurate)
         }
 
-        func find(checkAgainstSubclassSpecificKeywords: Bool) -> TypeSyntax? {
-            guard let inheritedTypes = classDecl.inheritanceClause?.inheritedTypes,
-                  let superclassType = inheritedTypes.first?.type.trimmed
-            else {
-                return nil
-            }
-
-            if checkAgainstSubclassSpecificKeywords {
+        func infer() -> TypeSyntax? {
+            if let superclassType = classDecl.possibleSuperclassType {
                 walk(classDecl)
                 return didFind ? superclassType : nil
             } else {
-                return superclassType
+                return nil
             }
         }
 
