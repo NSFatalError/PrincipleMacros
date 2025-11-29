@@ -186,7 +186,7 @@ extension ParameterExtractor {
             return nil
         }
 
-        if NilLiteralExprSyntax(expression) != nil {
+        if expression.is(NilLiteralExprSyntax.self) {
             let isolation = DeclModifierSyntax(name: .keyword(.nonisolated))
             return .nonisolated(trimmedModifer: isolation)
         }

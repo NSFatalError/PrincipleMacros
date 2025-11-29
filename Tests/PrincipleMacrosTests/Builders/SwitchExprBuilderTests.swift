@@ -18,7 +18,7 @@ internal struct SwitchExprBuilderTests {
     }
 
     @Test
-    func switchExpression() throws {
+    func build() throws {
         let enumCases = try EnumCasesList([
             makeEnumCase(from: "case first"),
             makeEnumCase(from: "case second(Int)"),
