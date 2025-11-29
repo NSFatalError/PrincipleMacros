@@ -7,7 +7,6 @@
 //
 
 @testable import PrincipleMacros
-import SwiftSyntaxMacroExpansion
 import Testing
 
 internal struct PropertiesListTests {
@@ -34,9 +33,8 @@ internal struct PropertiesListTests {
         }
         """
 
-        let classDecl = try #require(ClassDeclSyntax(decl))
-        let context = BasicMacroExpansionContext()
-        self.list = PropertiesParser.parse(memberBlock: classDecl.memberBlock, in: context)
+        let classDecl = try #require(decl.as(ClassDeclSyntax.self))
+        self.list = try PropertiesParser.parse(memberBlock: classDecl.memberBlock)
     }
 
     @Test

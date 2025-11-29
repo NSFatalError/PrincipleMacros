@@ -15,6 +15,26 @@ extension TypeSyntax {
     }
 }
 
+extension AttributeSyntax {
+
+    public func isLike(_ other: AttributeSyntax) -> Bool {
+        attributeName.isLike(other.attributeName)
+    }
+}
+
+extension AttributeListSyntax {
+
+    public func contains(like attribute: AttributeSyntax) -> Bool {
+        first(like: attribute) != nil
+    }
+
+    public func first(like attribute: AttributeSyntax) -> AttributeSyntax? {
+        lazy.compactMap(\.attribute).first { element in
+            element.isLike(attribute)
+        }
+    }
+}
+
 extension TypeSyntax {
 
     public var standardized: TypeSyntax {

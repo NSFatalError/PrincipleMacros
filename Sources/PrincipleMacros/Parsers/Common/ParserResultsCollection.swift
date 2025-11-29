@@ -12,6 +12,8 @@ where Element: ParserResult {
     associatedtype Element
 
     var all: [Element] { get }
+
+    init(_ all: [Element])
 }
 
 extension ParserResultsCollection {
@@ -26,5 +28,18 @@ extension ParserResultsCollection {
 
     public subscript(position: Int) -> Element {
         all[position]
+    }
+}
+
+extension ParserResultsCollection {
+
+    public init() {
+        self.init([])
+    }
+
+    public func filter(
+        _ isIncluded: (Element) throws -> Bool
+    ) rethrows -> Self {
+        try Self(filter(isIncluded))
     }
 }

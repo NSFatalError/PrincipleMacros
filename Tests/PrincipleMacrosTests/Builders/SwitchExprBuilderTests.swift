@@ -11,14 +11,14 @@ import Testing
 
 internal struct SwitchExprBuilderTests {
 
-    func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
+    private func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
         let enumCaseDecl = try #require(EnumCaseDeclSyntax(decl))
         let enumElement = try #require(enumCaseDecl.elements.first)
         return EnumCase(declaration: enumCaseDecl, element: enumElement)
     }
 
     @Test
-    func switchExpression() throws {
+    func build() throws {
         let enumCases = try EnumCasesList([
             makeEnumCase(from: "case first"),
             makeEnumCase(from: "case second(Int)"),

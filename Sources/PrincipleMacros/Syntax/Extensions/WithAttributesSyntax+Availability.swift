@@ -1,0 +1,48 @@
+//
+//  WithAttributesSyntax+Availability.swift
+//  PrincipleMacros
+//
+//  Created by Kamil Strzelecki on 17/01/2025.
+//  Copyright © 2025 Kamil Strzelecki. All rights reserved.
+//
+
+import SwiftSyntaxMacros
+
+extension WithAttributesSyntax {
+
+    public var availability: AttributeListSyntax? {
+        attributes.availability
+    }
+}
+
+extension AttributeListSyntax {
+
+    public var availability: Self? {
+        let elements = compactMap(\.availability)
+        return elements.isEmpty ? nil : AttributeListSyntax(elements)
+    }
+}
+
+extension AttributeListSyntax.Element {
+
+    public var availability: Self? {
+        switch self {
+        case let .attribute(attribute):
+            if let availability = attribute.availability {
+                return .attribute(availability)
+            }
+        case let .ifConfigDecl(ifConfig):
+            if let availability = ifConfig.availability {
+                return .ifConfigDecl(availability)
+            }
+        }
+        return nil
+    }
+}
+
+extension AttributeSyntax {
+
+    public var availability: Self? {
+        arguments?.is(AvailabilityArgumentListSyntax.self) == true ? self : nil
+    }
+}

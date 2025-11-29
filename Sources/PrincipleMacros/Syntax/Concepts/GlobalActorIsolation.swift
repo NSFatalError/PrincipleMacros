@@ -32,10 +32,10 @@ public enum GlobalActorIsolation {
     }
 
     public var standardizedIsolationAttribute: AttributeSyntax? {
-        guard let standardizedIsolationType else {
-            return nil
+        if let standardizedIsolationType {
+            return AttributeSyntax(attributeName: standardizedIsolationType)
         }
-        return AttributeSyntax(attributeName: standardizedIsolationType)
+        return nil
     }
 }
 

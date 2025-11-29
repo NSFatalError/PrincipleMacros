@@ -7,19 +7,16 @@
 //
 
 @testable import PrincipleMacros
-import SwiftSyntaxMacroExpansion
 import Testing
 
 internal struct PropertiesParserTests {
-
-    private let context = BasicMacroExpansionContext()
 
     @Test
     func storedLet() throws {
         let decl: DeclSyntax = """
         public internal(set) static let myLet: Int?
         """
-        let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
+        let property = try #require(PropertiesParser.parse(declaration: decl).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .immutable)
         #expect(property.accessControlLevel == .public)
@@ -36,7 +33,7 @@ internal struct PropertiesParserTests {
         let decl: DeclSyntax = """
         private(set) var myVar = "Hello, world!"
         """
-        let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
+        let property = try #require(PropertiesParser.parse(declaration: decl).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)
@@ -56,7 +53,7 @@ internal struct PropertiesParserTests {
             didSet { print("didSet", oldValue) }
         }
         """
-        let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
+        let property = try #require(PropertiesParser.parse(declaration: decl).first)
         #expect(property.kind == .stored)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)
@@ -76,7 +73,7 @@ internal struct PropertiesParserTests {
             [1, 2, 3] 
         }
         """
-        let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
+        let property = try #require(PropertiesParser.parse(declaration: decl).first)
         #expect(property.kind == .computed)
         #expect(property.mutability == .immutable)
         #expect(property.accessControlLevel == .fileprivate)
@@ -96,7 +93,7 @@ internal struct PropertiesParserTests {
             set { _storage = newValue }
         }
         """
-        let property = try #require(PropertiesParser.parse(declaration: decl, in: context).first)
+        let property = try #require(PropertiesParser.parse(declaration: decl).first)
         #expect(property.kind == .computed)
         #expect(property.mutability == .mutable)
         #expect(property.accessControlLevel == nil)

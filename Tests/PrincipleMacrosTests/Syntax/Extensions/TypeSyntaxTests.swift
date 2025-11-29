@@ -11,7 +11,7 @@ import Testing
 
 internal enum TypeSyntaxTests {
 
-    struct Basic {
+    struct Standardization {
 
         @Test
         func optionalLiteral() {
@@ -66,9 +66,6 @@ internal enum TypeSyntaxTests {
             let type: TypeSyntax = "(_ first: String, second: Int, Bool)"
             #expect(type.standardized.description == "(_ first: String, second: Int, Bool)")
         }
-    }
-
-    struct Complex {
 
         @Test(
             arguments: [

@@ -11,7 +11,7 @@ import Testing
 
 internal enum ExprSyntaxTests {
 
-    struct Basic {
+    struct InferredType {
 
         @Test
         func optionalLiteral() {
@@ -90,9 +90,6 @@ internal enum ExprSyntaxTests {
             let expr: ExprSyntax = "Model.self"
             #expect(expr.inferredType?.description == "Model.Type")
         }
-    }
-
-    struct Complex {
 
         @Test(
             arguments: [

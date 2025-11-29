@@ -12,24 +12,22 @@ import Testing
 
 internal struct EnumCasesParserTests {
 
-    private let context = BasicMacroExpansionContext()
-
     @Test
-    func enumCase() throws {
+    func withoutAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase
         """
-        let enumCase = try #require(EnumCasesParser.parse(declaration: decl, in: context).first)
+        let enumCase = try #require(EnumCasesParser.parse(declaration: decl).first)
         #expect(enumCase.trimmedName.description == "myCase")
         #expect(enumCase.associatedValues.isEmpty)
     }
 
     @Test
-    func enumCaseWithUnnamedAssociatedValue() throws {
+    func withUnnamedAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase(Int?)
         """
-        let enumCase = try #require(EnumCasesParser.parse(declaration: decl, in: context).first)
+        let enumCase = try #require(EnumCasesParser.parse(declaration: decl).first)
         #expect(enumCase.trimmedName.description == "myCase")
 
         let associatedValue0 = try #require(enumCase.associatedValues.first)
@@ -38,11 +36,11 @@ internal struct EnumCasesParserTests {
     }
 
     @Test
-    func enumCaseWithNamedAssociatedValue() throws {
+    func withNamedAssociatedValue() throws {
         let decl: DeclSyntax = """
         case myCase(values: [String])
         """
-        let enumCase = try #require(EnumCasesParser.parse(declaration: decl, in: context).first)
+        let enumCase = try #require(EnumCasesParser.parse(declaration: decl).first)
         #expect(enumCase.trimmedName.description == "myCase")
 
         let associatedValue0 = try #require(enumCase.associatedValues.first)
@@ -51,11 +49,11 @@ internal struct EnumCasesParserTests {
     }
 
     @Test
-    func enumCaseWithManyAssociatedValues() throws {
+    func withMultipleAssociatedValues() throws {
         let decl: DeclSyntax = """
         case myCase(value: Int?, [String])
         """
-        let enumCase = try #require(EnumCasesParser.parse(declaration: decl, in: context).first)
+        let enumCase = try #require(EnumCasesParser.parse(declaration: decl).first)
         #expect(enumCase.trimmedName.description == "myCase")
 
         let associatedValue0 = try #require(enumCase.associatedValues.first)

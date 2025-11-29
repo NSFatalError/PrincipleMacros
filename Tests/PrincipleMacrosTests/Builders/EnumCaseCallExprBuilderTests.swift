@@ -11,14 +11,14 @@ import Testing
 
 internal struct EnumCaseCallExprBuilderTests {
 
-    func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
+    private func makeEnumCase(from decl: DeclSyntax) throws -> EnumCase {
         let enumCaseDecl = try #require(EnumCaseDeclSyntax(decl))
         let enumElement = try #require(enumCaseDecl.elements.first)
         return EnumCase(declaration: enumCaseDecl, element: enumElement)
     }
 
     @Test
-    func callWithoutAssociatedValues() throws {
+    func withoutAssociatedValues() throws {
         let enumCase = try makeEnumCase(from: "case first")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { _ in
             Issue.record()
@@ -28,7 +28,7 @@ internal struct EnumCaseCallExprBuilderTests {
     }
 
     @Test
-    func callWithUnnamedAssociatedValue() throws {
+    func withUnnamedAssociatedValue() throws {
         let enumCase = try makeEnumCase(from: "case second(Int)")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { _ in
             "123" as ExprSyntax
@@ -37,7 +37,7 @@ internal struct EnumCaseCallExprBuilderTests {
     }
 
     @Test
-    func callWithMultipleAssociatedValues() throws {
+    func withMultipleAssociatedValues() throws {
         let enumCase = try makeEnumCase(from: "case third(arg: String, Int)")
         let builder = EnumCaseCallExprBuilder(for: enumCase) { associatedValue in
             if associatedValue.standardizedName.description == "arg" {

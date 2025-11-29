@@ -8,11 +8,11 @@
 
 import SwiftSyntaxMacros
 
-public struct EnumCasesList: _ParserResultsCollection {
+public struct EnumCasesList: ParserResultsCollection {
 
     public let all: [EnumCase]
 
-    init(_ all: [EnumCase]) {
+    public init(_ all: [EnumCase]) {
         self.all = all
     }
 }

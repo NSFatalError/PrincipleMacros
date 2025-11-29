@@ -12,19 +12,21 @@ extension MacroExpansionContext {
 
     public func diagnose(
         node: some SyntaxProtocol,
-        errorMessage: String
+        errorMessage: String,
+        fixIts: [FixIt] = []
     ) {
         let message = MacroExpansionErrorMessage(errorMessage)
-        let diagnostic = Diagnostic(node: node, message: message)
+        let diagnostic = Diagnostic(node: node, message: message, fixIts: fixIts)
         diagnose(diagnostic)
     }
 
     public func diagnose(
         node: some SyntaxProtocol,
-        warningMessage: String
+        warningMessage: String,
+        fixIts: [FixIt] = []
     ) {
         let message = MacroExpansionWarningMessage(warningMessage)
-        let diagnostic = Diagnostic(node: node, message: message)
+        let diagnostic = Diagnostic(node: node, message: message, fixIts: fixIts)
         diagnose(diagnostic)
     }
 }

@@ -66,20 +66,24 @@ extension StringLiteralExprSyntax {
 extension OptionalChainingExprSyntax {
 
     public var inferredType: TypeSyntax? {
-        guard let inferredType = expression.inferredType else {
-            return nil
+        if let inferredWrappedType {
+            return "Optional<\(inferredWrappedType)>"
         }
-        return "Optional<\(inferredType)>"
+        return nil
+    }
+
+    public var inferredWrappedType: TypeSyntax? {
+        expression.inferredType
     }
 }
 
 extension ArrayExprSyntax {
 
     public var inferredType: TypeSyntax? {
-        guard let inferredElementType else {
-            return nil
+        if let inferredElementType {
+            return "Array<\(inferredElementType)>"
         }
-        return "Array<\(inferredElementType)>"
+        return nil
     }
 
     public var inferredElementType: TypeSyntax? {
@@ -90,10 +94,10 @@ extension ArrayExprSyntax {
 extension DictionaryExprSyntax {
 
     public var inferredType: TypeSyntax? {
-        guard let inferredKeyType, let inferredValueType else {
-            return nil
+        if let inferredKeyType, let inferredValueType {
+            return "Dictionary<\(inferredKeyType), \(inferredValueType)>"
         }
-        return "Dictionary<\(inferredKeyType), \(inferredValueType)>"
+        return nil
     }
 
     public var inferredKeyType: TypeSyntax? {
@@ -125,18 +129,14 @@ extension FunctionCallExprSyntax {
 extension GenericSpecializationExprSyntax {
 
     public var inferredType: TypeSyntax? {
-        guard let inferredType = expression.inferredType else {
-            return nil
+        if let inferredType = expression.inferredType {
+            return "\(inferredType)\(genericArgumentClause.standardized)"
         }
-        return "\(inferredType)\(genericArgumentClause.standardized)"
+        return nil
     }
 }
 
 extension MemberAccessExprSyntax {
-
-    public var referencesBaseType: Bool {
-        declName.baseName.tokenKind == .keyword(.self)
-    }
 
     public var inferredType: TypeSyntax? {
         guard let first = base?.inferredType else {
@@ -146,6 +146,13 @@ extension MemberAccessExprSyntax {
             return "\(first).\(second)"
         }
         return first
+    }
+
+    public var baseTypeReference: TypeSyntax? {
+        if let base, declName.baseName.tokenKind == .keyword(.self) {
+            return "\(base.trimmed)"
+        }
+        return nil
     }
 }
 

@@ -11,18 +11,7 @@ import Testing
 
 internal enum GlobalActorIsolationTests {
 
-    internal struct Function {
-
-        @Test
-        func withNonisolatedNonsendingModifier() throws {
-            let decl: DeclSyntax = "nonisolated(nonsending) func test() {}"
-            let functionDecl = try #require(decl.as(FunctionDeclSyntax.self))
-            let isolation = GlobalActorIsolation.resolved(for: functionDecl, in: [])
-            #expect(isolation?.trimmedNonisolatedModifier?.trimmedDescription == "nonisolated(nonsending)")
-        }
-    }
-
-    internal struct Property {
+    internal struct MemberDeclaration {
 
         @Test
         func withGlobalActor() throws {
@@ -46,6 +35,14 @@ internal enum GlobalActorIsolationTests {
             let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
             let isolation = GlobalActorIsolation.resolved(for: propertyDecl, in: [])
             #expect(isolation?.trimmedNonisolatedModifier?.trimmedDescription == "nonisolated")
+        }
+
+        @Test
+        func withNonisolatedNonsendingModifier() throws {
+            let decl: DeclSyntax = "nonisolated(nonsending) func test() {}"
+            let functionDecl = try #require(decl.as(FunctionDeclSyntax.self))
+            let isolation = GlobalActorIsolation.resolved(for: functionDecl, in: [])
+            #expect(isolation?.trimmedNonisolatedModifier?.trimmedDescription == "nonisolated(nonsending)")
         }
 
         @Test
@@ -79,6 +76,16 @@ internal enum GlobalActorIsolationTests {
         }
 
         @Test
+        func withNonisolatedNonsendingModifierInStructWithGlobalActor() throws {
+            let decl: DeclSyntax = "nonisolated(nonsending) func test() {}"
+            let functionDecl = try #require(decl.as(FunctionDeclSyntax.self))
+            let structDecl: DeclSyntax = "@MyActor struct MyStruct {}"
+            let lexicalContext = [Syntax(structDecl)]
+            let isolation = GlobalActorIsolation.resolved(for: functionDecl, in: lexicalContext)
+            #expect(isolation?.trimmedNonisolatedModifier?.trimmedDescription == "nonisolated(nonsending)")
+        }
+
+        @Test
         func inNestedStructWithGlobalActor() throws {
             let decl: DeclSyntax = "var test = 123"
             let propertyDecl = try #require(decl.as(VariableDeclSyntax.self))
@@ -101,7 +108,7 @@ internal enum GlobalActorIsolationTests {
         }
     }
 
-    internal struct Class {
+    internal struct TypeDeclaration {
 
         @Test
         func withGlobalActor() throws {

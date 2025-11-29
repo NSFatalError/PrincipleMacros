@@ -13,8 +13,15 @@ extension MemberBuilding where Self: TypeDeclBuilder {
     public var inheritedAccessControlLevel: AccessControlLevel? {
         .forMember(
             of: typeDeclaration,
+            preferred: preferredAccessControlLevel
+        )
+    }
+
+    public var inheritedAccessControlLevelAllowingOpen: AccessControlLevel? {
+        .forMember(
+            of: typeDeclaration,
             preferred: preferredAccessControlLevel,
-            maxAllowed: maxAllowedAccessControlLevel
+            maxAllowed: .open
         )
     }
 }
