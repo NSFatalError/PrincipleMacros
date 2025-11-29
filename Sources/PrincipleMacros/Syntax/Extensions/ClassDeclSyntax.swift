@@ -10,53 +10,39 @@ import SwiftSyntaxMacros
 
 extension ClassDeclSyntax {
 
-    public var unverifiedInferredSuperclassType: TypeSyntax? {
-        inheritanceClause?.inheritedTypes.first?.type.trimmed
-    }
-
-    public func inferredSuperclassType() -> TypeSyntax? {
-        let verifier = SuperclassVerifier(for: self)
-        return verifier.verifiedSuperclassType()
-    }
-
     public func inferredSuperclassType(
-        isExpected: Bool?
-    ) throws -> TypeSyntax? {
-        switch isExpected {
-        case nil:
-            return inferredSuperclassType()
-        case true:
-            if let type = unverifiedInferredSuperclassType {
-                return type
-            }
-            throw DiagnosticsError(
-                node: self,
-                message: "\(name.trimmed) should have a superclass"
-            )
-        case false:
-            return nil
-        }
+        isKnownToBeSubclass: Bool = false
+    ) -> TypeSyntax? {
+        let finder = SuperclassFinder(for: self)
+        let needsCheck = !isKnownToBeSubclass
+        return finder.find(checkAgainstSubclassSpecificKeywords: needsCheck)
     }
 }
 
 extension ClassDeclSyntax {
 
-    private final class SuperclassVerifier: SyntaxVisitor {
+    private final class SuperclassFinder: SyntaxVisitor {
 
         private let classDecl: ClassDeclSyntax
-        private var didVerify = false
+        private var didFind = false
 
         init(for classDecl: ClassDeclSyntax) {
             self.classDecl = classDecl
             super.init(viewMode: .sourceAccurate)
         }
 
-        func verifiedSuperclassType() -> TypeSyntax? {
-            if let unverified = classDecl.unverifiedInferredSuperclassType {
-                walk(classDecl)
-                return didVerify ? unverified : nil
-            } else {
+        func find(checkAgainstSubclassSpecificKeywords: Bool) -> TypeSyntax? {
+            guard let inheritedTypes = classDecl.inheritanceClause?.inheritedTypes,
+                  let superclassType = inheritedTypes.first?.type.trimmed
+            else {
                 return nil
+            }
+
+            if checkAgainstSubclassSpecificKeywords {
+                walk(classDecl)
+                return didFind ? superclassType : nil
+            } else {
+                return superclassType
             }
         }
 
@@ -65,12 +51,12 @@ extension ClassDeclSyntax {
         }
 
         override func visit(_ node: DeclModifierSyntax) -> SyntaxVisitorContinueKind {
-            didVerify = didVerify || node.overrideSpecifier != nil
+            didFind = didFind || node.overrideSpecifier != nil
             return .visitChildren
         }
 
         override func visit(_: SuperExprSyntax) -> SyntaxVisitorContinueKind {
-            didVerify = true
+            didFind = true
             return .visitChildren
         }
     }
