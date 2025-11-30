@@ -12,7 +12,7 @@ extension AttributedTypeSyntax {
 
     public init(
         globalActorIsolation: GlobalActorIsolation?,
-        baseType: some TypeSyntaxProtocol
+        baseType: TypeSyntax
     ) {
         let specifiers: TypeSpecifierListSyntax =
             switch globalActorIsolation {
