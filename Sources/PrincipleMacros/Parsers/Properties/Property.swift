@@ -13,8 +13,6 @@ public final class Property: ParserResult {
 
     public let underlying: VariableDeclSyntax
     public let binding: PatternBindingSyntax
-
-    public let name: TokenSyntax
     public let trimmedName: TokenSyntax
     public let inferredType: TypeSyntax
 
@@ -31,8 +29,6 @@ public final class Property: ParserResult {
     ) {
         self.underlying = declaration
         self.binding = binding
-
-        self.name = name
         self.trimmedName = name.trimmed
         self.inferredType = inferredType
 
