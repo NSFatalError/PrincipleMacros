@@ -14,7 +14,7 @@ public enum EnumCasesParser: Parser {
         declaration: some DeclSyntaxProtocol
     ) -> EnumCasesList {
         guard let declaration = EnumCaseDeclSyntax(declaration) else {
-            return .init()
+            return EnumCasesList()
         }
 
         return EnumCasesList(

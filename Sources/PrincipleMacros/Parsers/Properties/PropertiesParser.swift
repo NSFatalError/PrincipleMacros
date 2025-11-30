@@ -14,7 +14,7 @@ public enum PropertiesParser: Parser {
         declaration: some DeclSyntaxProtocol
     ) throws -> PropertiesList {
         guard let declaration = VariableDeclSyntax(declaration) else {
-            return .init()
+            return PropertiesList()
         }
 
         return try PropertiesList(
