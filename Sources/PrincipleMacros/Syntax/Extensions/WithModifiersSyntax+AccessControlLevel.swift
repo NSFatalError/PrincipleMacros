@@ -23,6 +23,23 @@ extension WithModifiersSyntax {
     }
 }
 
+extension DeclModifierListSyntax {
+
+    public func withAccessControlLevel(_ level: AccessControlLevel?) -> Self {
+        var modifiers = filter { modifier in
+            modifier.accessControlLevel == nil
+                && modifier.setterAccessControlLevel == nil
+        }
+
+        if let level {
+            let modifier = DeclModifierSyntax(name: level.tokenSyntax)
+            modifiers.insert(modifier, at: modifiers.startIndex)
+        }
+
+        return modifiers
+    }
+}
+
 extension DeclModifierSyntax {
 
     public var accessControlLevel: AccessControlLevel? {
