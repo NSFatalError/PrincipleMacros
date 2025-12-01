@@ -71,7 +71,7 @@ extension GlobalActorIsolation {
     }
 
     private static func _resolved(
-        in fullContext: some Collection<Syntax>,
+        in fullContext: some Sequence<Syntax>,
         preferred: Self?
     ) -> Self? {
         if let preferred {

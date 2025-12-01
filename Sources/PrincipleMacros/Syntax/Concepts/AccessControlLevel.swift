@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-public enum AccessControlLevel: Int, Hashable, CaseIterable {
+public enum AccessControlLevel: Int, Hashable, CaseIterable, Sendable {
 
     case `private`
     case `fileprivate`

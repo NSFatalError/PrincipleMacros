@@ -35,4 +35,14 @@ extension AttributedTypeSyntax {
             baseType: baseType
         )
     }
+
+    public init(
+        globalActorIsolation: GlobalActorIsolation?,
+        baseType: some TypeSyntaxProtocol
+    ) {
+        self.init(
+            globalActorIsolation: globalActorIsolation,
+            baseType: TypeSyntax(baseType)
+        )
+    }
 }
