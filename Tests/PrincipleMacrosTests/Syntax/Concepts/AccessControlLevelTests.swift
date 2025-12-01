@@ -6,8 +6,8 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import Testing
 @testable import PrincipleMacros
+import Testing
 
 internal struct AccessControlLevelTests {
 

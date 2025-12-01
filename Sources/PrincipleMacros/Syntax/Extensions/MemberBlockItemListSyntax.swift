@@ -32,7 +32,7 @@ extension IfConfigClauseSyntax {
 
     public var flattenedMembers: some Sequence<MemberBlockItemSyntax> {
         switch elements {
-        case .decls(let members):
+        case let .decls(members):
             AnySequence(members.flattened)
         default:
             AnySequence(EmptyCollection<MemberBlockItemSyntax>())

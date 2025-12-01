@@ -10,7 +10,7 @@
 import Testing
 
 internal enum MemberBlockItemListSyntaxTests {
-    
+
     struct Flattening {
 
         @Test
