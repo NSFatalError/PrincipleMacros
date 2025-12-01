@@ -14,7 +14,7 @@ public enum PropertiesParser: Parser {
         declaration: some DeclSyntaxProtocol
     ) throws -> PropertiesList {
         guard let declaration = VariableDeclSyntax(declaration) else {
-            return .init()
+            return PropertiesList()
         }
 
         return try PropertiesList(
@@ -41,5 +41,23 @@ public enum PropertiesParser: Parser {
                 )
             }
         )
+    }
+
+    public static func parseStandalone(
+        declaration: some DeclSyntaxProtocol
+    ) throws -> Property? {
+        let properties = try parse(declaration: declaration)
+        guard let first = properties.first else {
+            return nil
+        }
+
+        guard properties.count == 1 else {
+            throw DiagnosticsError(
+                node: declaration,
+                message: "Property must have only one binding"
+            )
+        }
+
+        return first
     }
 }

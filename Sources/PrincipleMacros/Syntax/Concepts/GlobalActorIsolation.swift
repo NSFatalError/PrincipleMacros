@@ -13,6 +13,14 @@ public enum GlobalActorIsolation {
     case nonisolated(trimmedModifer: DeclModifierSyntax)
     case isolated(standardizedType: TypeSyntax)
 
+    public static var nonisolated: Self {
+        let modifier = DeclModifierSyntax(name: .keyword(.nonisolated))
+        return .nonisolated(trimmedModifer: modifier)
+    }
+}
+
+extension GlobalActorIsolation {
+
     public var trimmedNonisolatedModifier: DeclModifierSyntax? {
         switch self {
         case let .nonisolated(trimmedModifer):
@@ -63,7 +71,7 @@ extension GlobalActorIsolation {
     }
 
     private static func _resolved(
-        in fullContext: some Collection<Syntax>,
+        in fullContext: some Sequence<Syntax>,
         preferred: Self?
     ) -> Self? {
         if let preferred {

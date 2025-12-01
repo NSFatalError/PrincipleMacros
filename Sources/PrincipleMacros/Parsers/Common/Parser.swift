@@ -20,37 +20,19 @@ public protocol Parser {
 extension Parser {
 
     public static func parse(
-        ifConfig: IfConfigDeclSyntax
+        declarationGroup: some DeclGroupSyntax
     ) throws -> ResultsCollection {
-        try ResultsCollection(
-            ifConfig.clauses.flatMap { clause in
-                switch clause.elements {
-                case let .decls(members):
-                    try parse(members: members)
-                default:
-                    ResultsCollection()
-                }
-            }
-        )
+        let members = declarationGroup.memberBlock.members.flattened
+        return try parse(members: members)
     }
 
     public static func parse(
-        members: MemberBlockItemListSyntax
+        members: some Sequence<MemberBlockItemSyntax>
     ) throws -> ResultsCollection {
         try ResultsCollection(
             members.flatMap { member in
-                if let ifConfig = member.decl.as(IfConfigDeclSyntax.self) {
-                    try parse(ifConfig: ifConfig)
-                } else {
-                    try parse(declaration: member.decl)
-                }
+                try parse(declaration: member.decl)
             }
         )
-    }
-
-    public static func parse(
-        memberBlock: MemberBlockSyntax
-    ) throws -> ResultsCollection {
-        try parse(members: memberBlock.members)
     }
 }

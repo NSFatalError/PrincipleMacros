@@ -187,8 +187,7 @@ extension ParameterExtractor {
         }
 
         if expression.is(NilLiteralExprSyntax.self) {
-            let isolation = DeclModifierSyntax(name: .keyword(.nonisolated))
-            return .nonisolated(trimmedModifer: isolation)
+            return .nonisolated
         }
 
         guard let memberAccessExpression = MemberAccessExprSyntax(expression),

@@ -15,7 +15,7 @@ internal enum IfConfigDeclSyntaxTests {
 
         private func parseLastProperty(in decl: DeclSyntax) throws -> Property {
             let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-            let properties = try PropertiesParser.parse(memberBlock: classDecl.memberBlock)
+            let properties = try PropertiesParser.parse(declarationGroup: classDecl)
             return try #require(properties.last)
         }
 
@@ -130,7 +130,7 @@ internal enum IfConfigDeclSyntaxTests {
         }
 
         @Test
-        func applyToNewMembers() throws {
+        func applyToMemberBlock() throws {
             let decl: DeclSyntax = """
             class MyClass {
                 #if DEBUG
@@ -159,12 +159,12 @@ internal enum IfConfigDeclSyntaxTests {
             """
 
             let property = try parseLastProperty(in: decl)
-            let ifConfig = property.underlying.applyingEnclosingIfConfig(to: newMembers)
-            #expect(ifConfig?.description == expectation)
+            let ifConfig = newMembers.withIfConfigIfPresent(from: property.underlying)
+            #expect(ifConfig.description == expectation)
         }
 
         @Test
-        func applyToNewStatements() throws {
+        func applyToCodeBlock() throws {
             let decl: DeclSyntax = """
             class MyClass {
                 #if DEBUG
@@ -193,8 +193,8 @@ internal enum IfConfigDeclSyntaxTests {
             """
 
             let property = try parseLastProperty(in: decl)
-            let ifConfig = property.underlying.applyingEnclosingIfConfig(to: newStatements)
-            #expect(ifConfig?.description == expectation)
+            let ifConfig = newStatements.withIfConfigIfPresent(from: property.underlying)
+            #expect(ifConfig.description == expectation)
         }
 
         // swiftlint:enable empty_line_after_type_declaration

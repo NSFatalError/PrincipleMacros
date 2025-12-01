@@ -6,7 +6,7 @@
 //  Copyright © 2025 Kamil Strzelecki. All rights reserved.
 //
 
-import SwiftSyntax
+import SwiftSyntaxMacros
 
 extension IfConfigDeclSyntax {
 
@@ -65,6 +65,17 @@ extension MemberBlockItemListSyntax {
         }
         return nil
     }
+
+    @MemberBlockItemListBuilder
+    public func withIfConfigIfPresent(
+        from declaration: some DeclSyntaxProtocol
+    ) -> Self {
+        if let ifConfig = declaration.applyEnclosingIfConfig(to: .decls(self)) {
+            ifConfig
+        } else {
+            self
+        }
+    }
 }
 
 extension MemberBlockItemSyntax {
@@ -83,6 +94,20 @@ extension MemberBlockItemSyntax {
     }
 }
 
+extension CodeBlockItemListSyntax {
+
+    @CodeBlockItemListBuilder
+    public func withIfConfigIfPresent(
+        from declaration: some DeclSyntaxProtocol
+    ) -> Self {
+        if let ifConfig = declaration.applyEnclosingIfConfig(to: .statements(self)) {
+            ifConfig
+        } else {
+            self
+        }
+    }
+}
+
 extension DeclSyntaxProtocol {
 
     public var enclosingIfConfig: IfConfigDeclSyntax? {
@@ -92,23 +117,11 @@ extension DeclSyntaxProtocol {
         return nil
     }
 
-    public func applyingEnclosingIfConfig(
-        to members: MemberBlockItemListSyntax
-    ) -> IfConfigDeclSyntax? {
-        applyingEnclosingIfConfig(to: .decls(members.withLeadingNewline))
-    }
-
-    public func applyingEnclosingIfConfig(
-        to statements: CodeBlockItemListSyntax
-    ) -> IfConfigDeclSyntax? {
-        applyingEnclosingIfConfig(to: .statements(statements.withLeadingNewline))
-    }
-
-    private func applyingEnclosingIfConfig(
+    fileprivate func applyEnclosingIfConfig(
         to elements: IfConfigClauseSyntax.Elements
     ) -> IfConfigDeclSyntax? {
         if var ancestor = parent?.parent?.parent?.as(IfConfigClauseSyntax.self) {
-            ancestor = ancestor.with(\.elements, elements)
+            ancestor = ancestor.with(\.elements, elements.withLeadingNewline)
             return ancestor.enclosingIfConfig
         } else {
             return nil

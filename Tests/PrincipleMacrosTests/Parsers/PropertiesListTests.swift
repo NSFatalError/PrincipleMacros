@@ -34,7 +34,7 @@ internal struct PropertiesListTests {
         """
 
         let classDecl = try #require(decl.as(ClassDeclSyntax.self))
-        self.list = try PropertiesParser.parse(memberBlock: classDecl.memberBlock)
+        self.list = try PropertiesParser.parse(declarationGroup: classDecl)
     }
 
     @Test

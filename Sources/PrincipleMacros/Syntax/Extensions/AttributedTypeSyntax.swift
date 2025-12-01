@@ -12,7 +12,7 @@ extension AttributedTypeSyntax {
 
     public init(
         globalActorIsolation: GlobalActorIsolation?,
-        baseType: some TypeSyntaxProtocol
+        baseType: TypeSyntax
     ) {
         let specifiers: TypeSpecifierListSyntax =
             switch globalActorIsolation {
@@ -33,6 +33,16 @@ extension AttributedTypeSyntax {
             specifiers: specifiers,
             attributes: attributes,
             baseType: baseType
+        )
+    }
+
+    public init(
+        globalActorIsolation: GlobalActorIsolation?,
+        baseType: some TypeSyntaxProtocol
+    ) {
+        self.init(
+            globalActorIsolation: globalActorIsolation,
+            baseType: TypeSyntax(baseType)
         )
     }
 }
